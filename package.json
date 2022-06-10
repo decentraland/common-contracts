@@ -2,11 +2,6 @@
   "name": "@dcl/contracts-commons",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "files": [
-    "/contracts/**/*.sol",
-    "!/contracts/mocks/**/*"
-  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

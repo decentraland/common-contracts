@@ -1,6 +1,7 @@
+name: Compile and Test
+
 on: [push, pull_request]
 
-name: Compile and Test
 jobs:
   build:
     runs-on: ubuntu-latest

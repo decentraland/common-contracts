@@ -20,7 +20,9 @@ import "@dcl/contracts-commons/signatures/NonceVerifiable.sol";
 
 Allows a contract to support meta transactions.
 
-A relayer (Biconomy for example), can call the `executeMetaTransaction` function and call a function for another user instead. Saving gas fees for them.
+What are meta transactions? 
+
+They provide a way for users to enjoy "gasless" transactions by just signing the data of the transaction they want to execute and letting a relayer, which is the one that ends up paying the fees, to execute it.
 
 ### NonceVerifiable
 

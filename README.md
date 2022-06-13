@@ -5,7 +5,13 @@ Abstract contracts to be used and reused on different projects.
 ## Install
 
 ```
-npm install @dcl/contracts-commons
+npm install -D @dcl/contracts-commons
+```
+
+Requires Open Zeppelin upgradable contracts v4.5 as a peer dependency.
+
+```
+npm install -D @openzeppelin/contracts-upgradeable@4.5.0
 ```
 
 ## Usage
@@ -34,8 +40,35 @@ When the signatures are recovered, they have to be verifies with these nonces.
 
 They can be updated in order to invalidate signatures that were created with previous values.
 
-## Running Tests
+## Development
 
-Install dependencies with `npm ci`
+### Requirements
 
-Run tests with `npx hardhat test`
+- Node 16
+- Npm 8
+
+### Install dependencies
+
+```
+npm ci
+```
+
+### Compile
+
+```
+npx hardhat compile
+```
+
+### Test
+
+```
+npx hardhat test
+```
+
+Will report gas usage.
+
+```
+npx hardhat coverage
+```
+
+Will report coverage in the `coverage` directory.

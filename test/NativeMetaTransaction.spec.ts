@@ -12,24 +12,51 @@ import { getMetaTxFunctionData, getMetaTxSignature } from './utils/nativeMetaTra
 describe('NativeMetaTransaction', () => {
   let deployer: SignerWithAddress
   let user: SignerWithAddress
+  let extra: SignerWithAddress
   let NMTImplementatorFactory: DummyNativeMetaTransactionImplementator__factory
   let nmtImplementator: DummyNativeMetaTransactionImplementator
   let RelayerFactory: DummyRelayer__factory
   let relayer: DummyRelayer
 
-  describe('executeMetaTransaction', () => {
-    beforeEach(async () => {
-      ;[deployer, user] = await ethers.getSigners()
+  beforeEach(async () => {
+    ;[deployer, user, extra] = await ethers.getSigners()
 
-      NMTImplementatorFactory = await ethers.getContractFactory('DummyNativeMetaTransactionImplementator')
-      nmtImplementator = await NMTImplementatorFactory.connect(deployer).deploy()
+    NMTImplementatorFactory = await ethers.getContractFactory('DummyNativeMetaTransactionImplementator')
+    nmtImplementator = await NMTImplementatorFactory.connect(deployer).deploy()
 
-      await nmtImplementator.connect(deployer).initialize()
+    await nmtImplementator.connect(deployer).initialize()
 
-      RelayerFactory = await ethers.getContractFactory('DummyRelayer')
-      relayer = await RelayerFactory.connect(deployer).deploy(nmtImplementator.address)
+    RelayerFactory = await ethers.getContractFactory('DummyRelayer')
+    relayer = await RelayerFactory.connect(deployer).deploy(nmtImplementator.address)
+  })
+
+  describe('_getMsgSender', () => {
+    it('should extract the provided _userAddress instead of the msg.sender', async () => {
+      const abi = ['function increaseCounter(uint256 _amount)']
+      const metaTxFunctionData = getMetaTxFunctionData(abi, 'increaseCounter', [10])
+      const metaTxSignature = await getMetaTxSignature(user, nmtImplementator, metaTxFunctionData)
+
+      expect(await nmtImplementator.counter()).to.be.equal(0)
+      expect(await nmtImplementator.increaseCounterCaller()).to.be.equal('0x0000000000000000000000000000000000000000')
+
+      await nmtImplementator.connect(deployer).executeMetaTransaction(user.address, metaTxFunctionData, metaTxSignature)
+
+      expect(await nmtImplementator.counter()).to.be.equal(10)
+      expect(await nmtImplementator.increaseCounterCaller()).to.be.equal(user.address)
     })
 
+    it('should return the msg.sender if msg.data does not have the address appended', async () => {
+      expect(await nmtImplementator.counter()).to.be.equal(0)
+      expect(await nmtImplementator.increaseCounterCaller()).to.be.equal('0x0000000000000000000000000000000000000000')
+
+      await nmtImplementator.connect(extra).increaseCounter(20)
+
+      expect(await nmtImplementator.counter()).to.be.equal(20)
+      expect(await nmtImplementator.increaseCounterCaller()).to.be.equal(extra.address)
+    })
+  })
+
+  describe('executeMetaTransaction', () => {
     it('should increase the contract counter using a meta transaction', async () => {
       const abi = ['function increaseCounter(uint256 _amount)']
       const metaTxFunctionData = getMetaTxFunctionData(abi, 'increaseCounter', [10])
@@ -71,18 +98,6 @@ describe('NativeMetaTransaction', () => {
       expect(ethers.utils.defaultAbiCoder.decode(['uint256'], data)[0]).to.be.equal(30)
     })
 
-    it('should _getMsgSender should extract the provided _userAddress instead of the msg.sender', async () => {
-      const abi = ['function increaseCounter(uint256 _amount)']
-      const metaTxFunctionData = getMetaTxFunctionData(abi, 'increaseCounter', [10])
-      const metaTxSignature = await getMetaTxSignature(user, nmtImplementator, metaTxFunctionData)
-
-      expect(await nmtImplementator.increaseCounterCaller()).to.be.equal('0x0000000000000000000000000000000000000000')
-
-      await nmtImplementator.connect(deployer).executeMetaTransaction(user.address, metaTxFunctionData, metaTxSignature)
-
-      expect(await nmtImplementator.increaseCounterCaller()).to.be.equal(user.address)
-    })
-
     it('should revert with the relayed funcion revert message', async () => {
       const abi = ['function functionThatReverts()']
       const metaTxFunctionData = getMetaTxFunctionData(abi, 'functionThatReverts')
@@ -98,9 +113,21 @@ describe('NativeMetaTransaction', () => {
       const metaTxFunctionData = getMetaTxFunctionData(abi, 'functionThatRevertsSilently')
       const metaTxSignature = await getMetaTxSignature(user, nmtImplementator, metaTxFunctionData)
 
-      const functionThatReverts = nmtImplementator.connect(deployer).executeMetaTransaction(user.address, metaTxFunctionData, metaTxSignature)
+      const functionThatRevertsSilently = nmtImplementator.connect(deployer).executeMetaTransaction(user.address, metaTxFunctionData, metaTxSignature)
 
-      await expect(functionThatReverts).to.be.revertedWith('Transaction reverted without a reason string')
+      await expect(functionThatRevertsSilently).to.be.revertedWith('Transaction reverted without a reason string')
+    })
+
+    it('should revert when the recovered signer is not the same as the one provided as _userAddress', async () => {
+      const abi = ['function increaseCounter(uint256 _amount)']
+      const metaTxFunctionData = getMetaTxFunctionData(abi, 'increaseCounter', [10])
+      const metaTxSignature = await getMetaTxSignature(user, nmtImplementator, metaTxFunctionData)
+
+      expect(await nmtImplementator.counter()).to.be.equal(0)
+
+      const execute = nmtImplementator.connect(deployer).executeMetaTransaction(extra.address, metaTxFunctionData, metaTxSignature)
+
+      await expect(execute).to.be.revertedWith('NativeMetaTransaction#executeMetaTransaction: SIGNER_AND_SIGNATURE_DO_NOT_MATCH')
     })
   })
 })

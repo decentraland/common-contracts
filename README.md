@@ -1,11 +1,11 @@
-# Contracts Commons
+# Common Contracts
 
 Abstract contracts to be used and reused on different projects.
 
 ## Install
 
 ```
-npm install -D @dcl/contracts-commons
+npm install -D @dcl/common-contracts
 ```
 
 Requires Open Zeppelin upgradable contracts v4.5 as a peer dependency.
@@ -17,7 +17,7 @@ npm install -D @openzeppelin/contracts-upgradeable@4.5.0
 ## Usage
 
 ```
-import "@dcl/contracts-commons/signatures/NonceVerifiable.sol";
+import "@dcl/common-contracts/signatures/NonceVerifiable.sol";
 ```
 
 ## Contracts

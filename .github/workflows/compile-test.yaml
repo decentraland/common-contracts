@@ -3,7 +3,7 @@ name: Compile and Test
 on: [push, pull_request]
 
 jobs:
-  build:
+  compile-and-test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3

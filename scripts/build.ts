@@ -5,8 +5,8 @@ import path from 'path'
  * NOTE:
  * Publishing the package generated here will allow imports on contracts to be similar to openzeppelin ones.
  * For example, Instead of:
- * import "@dcl/contracts-commons/contracts/meta-transactions/NativeMetaTransaction.sol", we can have:
- * import "@dcl/contracts-commons/meta-transactions/NativeMetaTransaction.sol", removing an extra path segment.
+ * import "@dcl/common-contracts/contracts/meta-transactions/NativeMetaTransaction.sol", we can have:
+ * import "@dcl/common-contracts/meta-transactions/NativeMetaTransaction.sol", removing an extra path segment.
  */
 
 const rootPath = path.resolve(__dirname, '..')

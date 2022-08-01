@@ -10,6 +10,10 @@ contract DummyNonceVerifiableImplementator is NonceVerifiable {
         _transferOwnership(_owner);
     }
 
+    function test__NonceVerifiable_init() external {
+        __NonceVerifiable_init();
+    }
+
     function verifyContractNonce(uint256 _nonce) external view {
         _verifyContractNonce(_nonce);
     }

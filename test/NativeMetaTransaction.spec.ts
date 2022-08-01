@@ -30,6 +30,12 @@ describe('NativeMetaTransaction', () => {
     relayer = await RelayerFactory.connect(deployer).deploy(nmtImplementator.address)
   })
 
+  describe('__NativeMetaTransaction_init', () => {
+    it('should revert when called after initialization', async () => {
+      await expect(nmtImplementator.test__NativeMetaTransaction_init()).to.be.revertedWith('Initializable: contract is not initializing')
+    })
+  })
+
   describe('_getMsgSender', () => {
     it('should extract the provided _userAddress instead of the msg.sender', async () => {
       const abi = ['function increaseCounter(uint256 _amount)']

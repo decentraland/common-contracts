@@ -12,6 +12,10 @@ contract DummyNativeMetaTransactionImplementator is NativeMetaTransaction {
         __NativeMetaTransaction_init("DummyNativeMetaTransactionImplementator", "1");
     }
 
+    function test__NativeMetaTransaction_init() external {
+        __NativeMetaTransaction_init("DummyNativeMetaTransactionImplementator", "1");
+    }
+
     function increaseCounter(uint256 _amount) external {
         increaseCounterCaller = _getMsgSender();
         counter += _amount;

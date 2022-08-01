@@ -16,7 +16,9 @@ describe('NonceVerifiable', () => {
     ;[deployer, owner, signer, extra] = await ethers.getSigners()
 
     contractFactory = await ethers.getContractFactory('DummyNonceVerifiableImplementator')
-    contract = await contractFactory.deploy(owner.address)
+    contract = await contractFactory.deploy()
+
+    await contract.connect(deployer).initialize(owner.address)
   })
 
   describe('bumpContractNonce', () => {

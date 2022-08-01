@@ -23,6 +23,10 @@ abstract contract NonceVerifiable is OwnableUpgradeable {
     event SignerNonceUpdated(uint256 _from, uint256 _to, address _signer, address _sender);
     event AssetNonceUpdated(uint256 _from, uint256 _to, address _contractAddress, uint256 _tokenId, address _signer, address _sender);
 
+    function __NonceVerifiable_init() internal onlyInitializing {
+        __Ownable_init();
+    }
+
     /// @notice As the owner of the contract, increase the contract nonce by 1.
     function bumpContractNonce() external onlyOwner {
         _bumpContractNonce();

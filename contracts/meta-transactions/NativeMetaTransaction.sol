@@ -20,6 +20,10 @@ abstract contract NativeMetaTransaction is EIP712Upgradeable {
 
     event MetaTransactionExecuted(address _userAddress, address _relayerAddress, bytes _functionData);
 
+    function __NativeMetaTransaction_init(string memory _name, string memory _version) internal onlyInitializing {
+        __EIP712_init(_name, _version);
+    }
+
     /// @notice Execute a transaction from the contract appending _userAddress to the call data.
     /// @dev The appended address can then be extracted from the called context with _getMsgSender instead of using msg.sender.
     /// The caller of `executeMetaTransaction` will pay for gas fees so _userAddress can experience "gasless" transactions.

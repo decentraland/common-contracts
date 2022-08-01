@@ -21,17 +21,11 @@ describe('NonceVerifiable', () => {
     await contract.connect(deployer).initialize(owner.address)
   })
 
-  describe('initialize', () => {
+  describe('__NonceVerifiable_init', () => {
     it('should set the owner', async () => {
       expect(await contract.owner()).to.be.equal(owner.address)
     })
 
-    it('should revert when initialized twice', async () => {
-      await expect(contract.connect(deployer).initialize(owner.address)).to.be.revertedWith('Initializable: contract is already initialized')
-    })
-  })
-
-  describe('__NonceVerifiable_init', () => {
     it('should revert when called after initialization', async () => {
       await expect(contract.connect(deployer).test__NonceVerifiable_init()).to.be.revertedWith('Initializable: contract is not initializing')
     })

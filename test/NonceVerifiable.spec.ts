@@ -18,7 +18,21 @@ describe('NonceVerifiable', () => {
     contractFactory = await ethers.getContractFactory('DummyNonceVerifiableImplementator')
     contract = await contractFactory.deploy()
 
-    await contract.connect(deployer).initialize(owner.address)
+    await contract.connect(deployer).initialize()
+    await contract.connect(deployer).transferOwnership(owner.address)
+  })
+
+  describe('initialize', () => {
+    it('should set the owner as the caller after initializing', async () => {
+      contractFactory = await ethers.getContractFactory('DummyNonceVerifiableImplementator')
+      contract = await contractFactory.deploy()
+
+      expect(await contract.owner()).to.be.equal('0x0000000000000000000000000000000000000000')
+
+      await contract.initialize()
+
+      expect(await contract.owner()).to.be.equal(deployer.address)
+    })
   })
 
   describe('__NonceVerifiable_init', () => {

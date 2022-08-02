@@ -47,6 +47,10 @@ describe('NativeMetaTransaction', () => {
       expect(nameAndVersionHashes[0]).to.be.equal('0x6baad1a72bd9870da55684691faafc1a398ac29693b22f98f50df610295a1a47')
       expect(nameAndVersionHashes[1]).to.be.equal('0xc89efdaa54c0f20c7adf612882df0950f5a951637e0307cdcb4c672f298b8bc6')
     })
+
+    it('should revert when initialized twice', async () => {
+      await expect(nmtImplementator.initialize()).to.be.revertedWith('Initializable: contract is already initialized')
+    })
   })
 
   describe('__NativeMetaTransaction_init', () => {

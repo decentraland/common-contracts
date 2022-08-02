@@ -16,7 +16,37 @@ describe('NonceVerifiable', () => {
     ;[deployer, owner, signer, extra] = await ethers.getSigners()
 
     contractFactory = await ethers.getContractFactory('DummyNonceVerifiableImplementator')
-    contract = await contractFactory.deploy(owner.address)
+    contract = await contractFactory.deploy()
+
+    await contract.connect(deployer).initialize()
+    await contract.connect(deployer).transferOwnership(owner.address)
+  })
+
+  describe('initialize', () => {
+    it('should set the owner as the caller after initializing', async () => {
+      contractFactory = await ethers.getContractFactory('DummyNonceVerifiableImplementator')
+      contract = await contractFactory.deploy()
+
+      expect(await contract.owner()).to.be.equal('0x0000000000000000000000000000000000000000')
+
+      await contract.initialize()
+
+      expect(await contract.owner()).to.be.equal(deployer.address)
+    })
+
+    it('should revert when initialized twice', async () => {
+      await expect(contract.initialize()).to.be.revertedWith('Initializable: contract is already initialized')
+    })
+  })
+
+  describe('__NonceVerifiable_init', () => {
+    it('should set the owner', async () => {
+      expect(await contract.owner()).to.be.equal(owner.address)
+    })
+
+    it('should revert when called after initialization', async () => {
+      await expect(contract.connect(deployer).test__NonceVerifiable_init()).to.be.revertedWith('Initializable: contract is not initializing')
+    })
   })
 
   describe('bumpContractNonce', () => {

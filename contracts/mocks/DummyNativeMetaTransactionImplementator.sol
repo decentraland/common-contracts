@@ -9,7 +9,15 @@ contract DummyNativeMetaTransactionImplementator is NativeMetaTransaction {
     address public increaseCounterCaller;
 
     function initialize() external initializer {
-        __EIP712_init("DummyNativeMetaTransactionImplementator", "1");
+        __NativeMetaTransaction_init("DummyNativeMetaTransactionImplementator", "1");
+    }
+
+    function test__NativeMetaTransaction_init() external {
+        __NativeMetaTransaction_init("DummyNativeMetaTransactionImplementator", "1");
+    }
+
+    function getNameAndVersionHash() external view returns (bytes32, bytes32) {
+        return (_EIP712NameHash(), _EIP712VersionHash());
     }
 
     function increaseCounter(uint256 _amount) external {

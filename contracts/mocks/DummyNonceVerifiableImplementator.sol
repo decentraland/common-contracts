@@ -5,8 +5,12 @@ pragma solidity ^0.8.7;
 import "../signatures/NonceVerifiable.sol";
 
 contract DummyNonceVerifiableImplementator is NonceVerifiable {
-    constructor(address _owner) {
-        _transferOwnership(_owner);
+    function initialize() external initializer {
+        __NonceVerifiable_init();
+    }
+
+    function test__NonceVerifiable_init() external {
+        __NonceVerifiable_init();
     }
 
     function verifyContractNonce(uint256 _nonce) external view {

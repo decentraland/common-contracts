@@ -20,7 +20,7 @@ abstract contract NativeMetaTransaction is EIP712Upgradeable {
 
     event MetaTransactionExecuted(address _userAddress, address _relayerAddress, bytes _functionData);
 
-    function __NativeMetaTransaction_init(string memory _name, string memory _version) internal onlyInitializing {
+    function __NativeMetaTransaction_init(string memory _name, string memory _version) internal {
         __EIP712_init(_name, _version);
     }
 

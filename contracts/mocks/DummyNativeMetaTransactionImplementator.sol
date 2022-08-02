@@ -16,6 +16,10 @@ contract DummyNativeMetaTransactionImplementator is NativeMetaTransaction {
         __NativeMetaTransaction_init("DummyNativeMetaTransactionImplementator", "1");
     }
 
+    function getNameAndVersionHash() external view returns (bytes32, bytes32) {
+        return (_EIP712NameHash(), _EIP712VersionHash());
+    }
+
     function increaseCounter(uint256 _amount) external {
         increaseCounterCaller = _getMsgSender();
         counter += _amount;

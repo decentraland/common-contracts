@@ -30,6 +30,25 @@ describe('NativeMetaTransaction', () => {
     relayer = await RelayerFactory.connect(deployer).deploy(nmtImplementator.address)
   })
 
+  describe('initialize', () => {
+    it('should set eip712 name and version hash after initialize', async () => {
+      NMTImplementatorFactory = await ethers.getContractFactory('DummyNativeMetaTransactionImplementator')
+      nmtImplementator = await NMTImplementatorFactory.connect(deployer).deploy()
+
+      let nameAndVersionHashes = await nmtImplementator.getNameAndVersionHash()
+
+      expect(nameAndVersionHashes[0]).to.be.equal('0x0000000000000000000000000000000000000000000000000000000000000000')
+      expect(nameAndVersionHashes[1]).to.be.equal('0x0000000000000000000000000000000000000000000000000000000000000000')
+
+      await nmtImplementator.connect(deployer).initialize()
+
+      nameAndVersionHashes = await nmtImplementator.getNameAndVersionHash()
+
+      expect(nameAndVersionHashes[0]).to.be.equal('0x6baad1a72bd9870da55684691faafc1a398ac29693b22f98f50df610295a1a47')
+      expect(nameAndVersionHashes[1]).to.be.equal('0xc89efdaa54c0f20c7adf612882df0950f5a951637e0307cdcb4c672f298b8bc6')
+    })
+  })
+
   describe('__NativeMetaTransaction_init', () => {
     it('should revert when called after initialization', async () => {
       await expect(nmtImplementator.test__NativeMetaTransaction_init()).to.be.revertedWith('Initializable: contract is not initializing')

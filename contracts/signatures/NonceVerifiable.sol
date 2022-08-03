@@ -27,6 +27,8 @@ abstract contract NonceVerifiable is OwnableUpgradeable {
         __Ownable_init();
     }
 
+    function __NonceVerifiable_init_unchained() internal onlyInitializing {}
+
     /// @notice As the owner of the contract, increase the contract nonce by 1.
     function bumpContractNonce() external onlyOwner {
         _bumpContractNonce();

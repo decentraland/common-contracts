@@ -144,7 +144,9 @@ describe('NativeMetaTransaction', () => {
 
       const functionThatRevertsSilently = nmtImplementator.connect(deployer).executeMetaTransaction(user.address, metaTxFunctionData, metaTxSignature)
 
-      await expect(functionThatRevertsSilently).to.be.revertedWith('Transaction reverted without a reason string')
+      await expect(functionThatRevertsSilently).to.be.revertedWith(
+        "Transaction reverted and Hardhat couldn't infer the reason. Please report this to help us improve Hardhat"
+      )
     })
 
     it('should revert when the recovered signer is not the same as the one provided as _userAddress', async () => {

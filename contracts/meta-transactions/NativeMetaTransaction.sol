@@ -48,15 +48,10 @@ abstract contract NativeMetaTransaction is EIP712Upgradeable {
 
         (bool success, bytes memory returnData) = address(this).call{value: msg.value}(abi.encodePacked(_functionData, _userAddress));
 
-        // Bubble up error based on https://github.com/Uniswap/v3-periphery/blob/v1.0.0/contracts/base/Multicall.sol
+        // Bubble up error based on https://ethereum.stackexchange.com/a/83577
         if (!success) {
-            if (returnData.length < 68) {
-                // Revert silently when there is no message in the returned data.
-                revert();
-            }
-
             assembly {
-                // Remove the selector.
+                // Slice the sighash.
                 returnData := add(returnData, 0x04)
             }
 

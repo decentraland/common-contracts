@@ -57,7 +57,7 @@ describe('NonceVerifiable', () => {
     })
 
     it('should emit an event regarding the contract nonce update', async () => {
-      await expect(contract.connect(owner).bumpContractNonce()).to.emit(contract, 'ContractNonceUpdated').withArgs(1, owner.address)
+      await expect(contract.connect(owner).bumpContractNonce()).to.emit(contract, 'ContractNonceUpdated').withArgs(owner.address, 1)
     })
 
     it('should revert if the caller is not the contract owner', async () => {
@@ -73,7 +73,7 @@ describe('NonceVerifiable', () => {
     })
 
     it('should emit an event regarding the contract nonce update', async () => {
-      await expect(contract.connect(signer).bumpSignerNonce()).to.emit(contract, 'SignerNonceUpdated').withArgs(1, signer.address, signer.address)
+      await expect(contract.connect(signer).bumpSignerNonce()).to.emit(contract, 'SignerNonceUpdated').withArgs(signer.address, signer.address, 1)
     })
   })
 
@@ -87,7 +87,7 @@ describe('NonceVerifiable', () => {
     it('should emit an event regarding the contract nonce update', async () => {
       await expect(contract.connect(signer).bumpAssetNonce(extra.address, 0))
         .to.emit(contract, 'AssetNonceUpdated')
-        .withArgs(1, extra.address, 0, signer.address, signer.address)
+        .withArgs(signer.address, signer.address, extra.address, 0, 1)
     })
   })
 
@@ -124,6 +124,18 @@ describe('NonceVerifiable', () => {
 
     it('should NOT revert when the provided nonce matches with the asset nonce', async () => {
       await expect(contract.verifyAssetNonce(extra.address, 0, signer.address, 0)).to.not.be.revertedWith(err)
+    })
+  })
+
+  describe('bumpAll (mock)', () => {
+    it('should emit ContractNonceUpdated, SignerNonceUpdated and AssetNonceUpdated events', async () => {
+      await expect(contract.connect(owner).bumpAll(extra.address, 0, signer.address))
+        .to.emit(contract, 'ContractNonceUpdated')
+        .withArgs(owner.address, 1)
+        .and.to.emit(contract, 'SignerNonceUpdated')
+        .withArgs(owner.address, signer.address, 1)
+        .and.to.emit(contract, 'AssetNonceUpdated')
+        .withArgs(owner.address, signer.address, extra.address, 0, 1)
     })
   })
 })

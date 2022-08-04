@@ -92,7 +92,7 @@ describe('NonceVerifiable', () => {
   })
 
   describe('_verifyContractNonce', () => {
-    const err = 'NonceVerifiable#_verifyContractNonce: CONTRACT_NONCE_MISMATCH'
+    const err = 'ContractNonceVerifiable#_verifyContractNonce: CONTRACT_NONCE_MISMATCH'
 
     it('should revert when the provided nonce does not match with the contract nonce', async () => {
       await expect(contract.verifyContractNonce(1)).to.be.revertedWith(err)
@@ -104,7 +104,7 @@ describe('NonceVerifiable', () => {
   })
 
   describe('_verifySignerNonce', () => {
-    const err = 'NonceVerifiable#_verifySignerNonce: SIGNER_NONCE_MISMATCH'
+    const err = 'SignerNonceVerifiable#_verifySignerNonce: SIGNER_NONCE_MISMATCH'
 
     it('should revert when the provided nonce does not match with the signer nonce', async () => {
       await expect(contract.verifySignerNonce(signer.address, 1)).to.be.revertedWith(err)
@@ -116,7 +116,7 @@ describe('NonceVerifiable', () => {
   })
 
   describe('_verifyAssetNonce', () => {
-    const err = 'NonceVerifiable#_verifyAssetNonce: ASSET_NONCE_MISMATCH'
+    const err = 'AssetNonceVerifiable#_verifyAssetNonce: ASSET_NONCE_MISMATCH'
 
     it('should revert when the provided nonce does not match with the asset nonce', async () => {
       await expect(contract.verifyAssetNonce(extra.address, 0, signer.address, 1)).to.be.revertedWith(err)

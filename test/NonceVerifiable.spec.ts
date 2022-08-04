@@ -1,7 +1,7 @@
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
 import { expect } from 'chai'
 import { ethers } from 'hardhat'
-import { DummyNonceVerifiableImplementator, DummyNonceVerifiableImplementator__factory } from '../typechain-types'
+import { DummyNonceVerifiableImplementor, DummyNonceVerifiableImplementor__factory } from '../typechain-types'
 
 describe('NonceVerifiable', () => {
   let deployer: SignerWithAddress
@@ -9,13 +9,13 @@ describe('NonceVerifiable', () => {
   let signer: SignerWithAddress
   let extra: SignerWithAddress
 
-  let contractFactory: DummyNonceVerifiableImplementator__factory
-  let contract: DummyNonceVerifiableImplementator
+  let contractFactory: DummyNonceVerifiableImplementor__factory
+  let contract: DummyNonceVerifiableImplementor
 
   beforeEach(async () => {
     ;[deployer, owner, signer, extra] = await ethers.getSigners()
 
-    contractFactory = await ethers.getContractFactory('DummyNonceVerifiableImplementator')
+    contractFactory = await ethers.getContractFactory('DummyNonceVerifiableImplementor')
     contract = await contractFactory.deploy()
 
     await contract.connect(deployer).initialize()
@@ -24,7 +24,7 @@ describe('NonceVerifiable', () => {
 
   describe('initialize', () => {
     it('should set the owner as the caller after initializing', async () => {
-      contractFactory = await ethers.getContractFactory('DummyNonceVerifiableImplementator')
+      contractFactory = await ethers.getContractFactory('DummyNonceVerifiableImplementor')
       contract = await contractFactory.deploy()
 
       expect(await contract.owner()).to.be.equal('0x0000000000000000000000000000000000000000')
@@ -92,7 +92,7 @@ describe('NonceVerifiable', () => {
   })
 
   describe('_verifyContractNonce', () => {
-    const err = 'NonceVerifiable#_verifyContractNonce: CONTRACT_NONCE_MISSMATCH'
+    const err = 'NonceVerifiable#_verifyContractNonce: CONTRACT_NONCE_MISMATCH'
 
     it('should revert when the provided nonce does not match with the contract nonce', async () => {
       await expect(contract.verifyContractNonce(1)).to.be.revertedWith(err)
@@ -104,7 +104,7 @@ describe('NonceVerifiable', () => {
   })
 
   describe('_verifySignerNonce', () => {
-    const err = 'NonceVerifiable#_verifySignerNonce: SIGNER_NONCE_MISSMATCH'
+    const err = 'NonceVerifiable#_verifySignerNonce: SIGNER_NONCE_MISMATCH'
 
     it('should revert when the provided nonce does not match with the signer nonce', async () => {
       await expect(contract.verifySignerNonce(signer.address, 1)).to.be.revertedWith(err)
@@ -116,7 +116,7 @@ describe('NonceVerifiable', () => {
   })
 
   describe('_verifyAssetNonce', () => {
-    const err = 'NonceVerifiable#_verifyAssetNonce: ASSET_NONCE_MISSMATCH'
+    const err = 'NonceVerifiable#_verifyAssetNonce: ASSET_NONCE_MISMATCH'
 
     it('should revert when the provided nonce does not match with the asset nonce', async () => {
       await expect(contract.verifyAssetNonce(extra.address, 0, signer.address, 1)).to.be.revertedWith(err)

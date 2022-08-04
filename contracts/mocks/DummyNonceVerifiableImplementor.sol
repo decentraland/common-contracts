@@ -4,7 +4,7 @@ pragma solidity ^0.8.7;
 
 import "../signatures/NonceVerifiable.sol";
 
-contract DummyNonceVerifiableImplementator is NonceVerifiable {
+contract DummyNonceVerifiableImplementor is NonceVerifiable {
     function initialize() external initializer {
         __NonceVerifiable_init();
     }

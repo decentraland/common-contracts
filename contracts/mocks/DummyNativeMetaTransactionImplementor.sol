@@ -4,16 +4,16 @@ pragma solidity ^0.8.7;
 
 import "../meta-transactions/NativeMetaTransaction.sol";
 
-contract DummyNativeMetaTransactionImplementator is NativeMetaTransaction {
+contract DummyNativeMetaTransactionImplementor is NativeMetaTransaction {
     uint256 public counter;
     address public increaseCounterCaller;
 
     function initialize() external initializer {
-        __NativeMetaTransaction_init("DummyNativeMetaTransactionImplementator", "1");
+        __NativeMetaTransaction_init("DummyNativeMetaTransactionImplementor", "1");
     }
 
     function test__NativeMetaTransaction_init() external {
-        __NativeMetaTransaction_init("DummyNativeMetaTransactionImplementator", "1");
+        __NativeMetaTransaction_init("DummyNativeMetaTransactionImplementor", "1");
     }
 
     function getNameAndVersionHash() external view returns (bytes32, bytes32) {

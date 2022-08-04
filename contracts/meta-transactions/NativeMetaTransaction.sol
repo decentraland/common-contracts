@@ -9,7 +9,7 @@ abstract contract NativeMetaTransaction is EIP712Upgradeable {
     bytes32 private constant META_TRANSACTION_TYPEHASH = keccak256(bytes("MetaTransaction(uint256 nonce,address from,bytes functionData)"));
 
     /// @notice Track signer nonces so the same signature cannot be used more than once.
-    mapping(address => uint256) public nonces;
+    mapping(address => uint256) private nonces;
 
     /// @notice Struct with the data required to verify that the signature signer is the same as `from`.
     struct MetaTransaction {
@@ -25,6 +25,13 @@ abstract contract NativeMetaTransaction is EIP712Upgradeable {
     }
 
     function __NativeMetaTransaction_init_unchained() internal onlyInitializing {}
+
+    /// @notice Get the current nonce of a given signer.
+    /// @param _signer The address of the signer.
+    /// @return The current nonce of the signer.
+    function getNonce(address _signer) external view returns (uint256) {
+        return nonces[_signer];
+    }
 
     /// @notice Execute a transaction from the contract appending _userAddress to the call data.
     /// @dev The appended address can then be extracted from the called context with _getMsgSender instead of using msg.sender.

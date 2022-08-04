@@ -19,9 +19,9 @@ abstract contract NonceVerifiable is OwnableUpgradeable {
     /// @custom:schema (contract address -> token id -> signer address -> nonce)
     mapping(address => mapping(uint256 => mapping(address => uint256))) private assetNonce;
 
-    event ContractNonceUpdated(uint256 _from, uint256 _to, address _sender);
-    event SignerNonceUpdated(uint256 _from, uint256 _to, address _signer, address _sender);
-    event AssetNonceUpdated(uint256 _from, uint256 _to, address _contractAddress, uint256 _tokenId, address _signer, address _sender);
+    event ContractNonceUpdated(uint256 _newNonce, address _sender);
+    event SignerNonceUpdated(address indexed _signer, uint256 _newNonce, address _sender);
+    event AssetNonceUpdated(address indexed _signer, address indexed _contractAddress, uint256 indexed _tokenId, uint256 _newNonce, address _sender);
 
     function __NonceVerifiable_init() internal onlyInitializing {
         __Ownable_init();
@@ -74,12 +74,12 @@ abstract contract NonceVerifiable is OwnableUpgradeable {
 
     /// @dev Increase the contract nonce by 1
     function _bumpContractNonce() internal {
-        emit ContractNonceUpdated(contractNonce, ++contractNonce, _msgSender());
+        emit ContractNonceUpdated(++contractNonce, _msgSender());
     }
 
     /// @dev Increase the signer nonce by 1
     function _bumpSignerNonce(address _signer) internal {
-        emit SignerNonceUpdated(signerNonce[_signer], ++signerNonce[_signer], _signer, _msgSender());
+        emit SignerNonceUpdated(_signer, ++signerNonce[_signer], _msgSender());
     }
 
     /// @dev Increase the asset nonce by 1
@@ -88,14 +88,7 @@ abstract contract NonceVerifiable is OwnableUpgradeable {
         uint256 _tokenId,
         address _signer
     ) internal {
-        emit AssetNonceUpdated(
-            assetNonce[_contractAddress][_tokenId][_signer],
-            ++assetNonce[_contractAddress][_tokenId][_signer],
-            _contractAddress,
-            _tokenId,
-            _signer,
-            _msgSender()
-        );
+        emit AssetNonceUpdated(_signer, _contractAddress, _tokenId, ++assetNonce[_contractAddress][_tokenId][_signer], _msgSender());
     }
 
     /// @dev Reverts if the provided nonce does not match the contract nonce.

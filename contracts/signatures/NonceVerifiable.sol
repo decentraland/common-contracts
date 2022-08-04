@@ -7,17 +7,17 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 abstract contract NonceVerifiable is OwnableUpgradeable {
     /// @notice Current nonce at a contract level. Only updatable by the owner of the contract.
     /// Updating it will invalidate all signatures created with the previous value on a contract level.
-    uint256 public contractNonce;
+    uint256 private contractNonce;
 
     /// @notice Current nonce per signer.
     /// Updating it will invalidate all signatures created with the previous value on a signer level.
     /// @custom:schema (signer address -> nonce)
-    mapping(address => uint256) public signerNonce;
+    mapping(address => uint256) private signerNonce;
 
     /// @notice Current nonce per asset per signer.
     /// Updating it will invalidate all signatures created with the previous value on an asset level.
     /// @custom:schema (contract address -> token id -> signer address -> nonce)
-    mapping(address => mapping(uint256 => mapping(address => uint256))) public assetNonce;
+    mapping(address => mapping(uint256 => mapping(address => uint256))) private assetNonce;
 
     event ContractNonceUpdated(address indexed _sender, uint256 _newNonce);
     event SignerNonceUpdated(address indexed _sender, address indexed _signer, uint256 _newNonce);
@@ -28,6 +28,32 @@ abstract contract NonceVerifiable is OwnableUpgradeable {
     }
 
     function __NonceVerifiable_init_unchained() internal onlyInitializing {}
+
+    /// @notice Get the current contract nonce.
+    /// @return The current contract nonce.
+    function getContractNonce() external view returns (uint256) {
+        return contractNonce;
+    }
+
+    /// @notice Get the current signer nonce.
+    /// @param _signer The address of the signer.
+    /// @return The nonce of the given signer.
+    function getSignerNonce(address _signer) external view returns (uint256) {
+        return signerNonce[_signer];
+    }
+
+    /// @notice Get the signer nonce for a given ERC721 token.
+    /// @param _contractAddress The address of the ERC721 contract.
+    /// @param _tokenId The id of the ERC721 token.
+    /// @param _signer The address of the signer.
+    /// @return The nonce of the given signer for the provided asset.
+    function getAssetNonce(
+        address _contractAddress,
+        uint256 _tokenId,
+        address _signer
+    ) external view returns (uint256) {
+        return assetNonce[_contractAddress][_tokenId][_signer];
+    }
 
     /// @notice As the owner of the contract, increase the contract nonce by 1.
     function bumpContractNonce() external onlyOwner {
@@ -67,12 +93,12 @@ abstract contract NonceVerifiable is OwnableUpgradeable {
 
     /// @dev Reverts if the provided nonce does not match the contract nonce.
     function _verifyContractNonce(uint256 _nonce) internal view {
-        require(_nonce == contractNonce, "NonceVerifiable#_verifyContractNonce: CONTRACT_NONCE_MISSMATCH");
+        require(_nonce == contractNonce, "NonceVerifiable#_verifyContractNonce: CONTRACT_NONCE_MISMATCH");
     }
 
     /// @dev Reverts if the provided nonce does not match the signer nonce.
     function _verifySignerNonce(address _signer, uint256 _nonce) internal view {
-        require(_nonce == signerNonce[_signer], "NonceVerifiable#_verifySignerNonce: SIGNER_NONCE_MISSMATCH");
+        require(_nonce == signerNonce[_signer], "NonceVerifiable#_verifySignerNonce: SIGNER_NONCE_MISMATCH");
     }
 
     /// @dev Reverts if the provided nonce does not match the asset nonce.
@@ -82,6 +108,6 @@ abstract contract NonceVerifiable is OwnableUpgradeable {
         address _signer,
         uint256 _nonce
     ) internal view {
-        require(_nonce == assetNonce[_contractAddress][_tokenId][_signer], "NonceVerifiable#_verifyAssetNonce: ASSET_NONCE_MISSMATCH");
+        require(_nonce == assetNonce[_contractAddress][_tokenId][_signer], "NonceVerifiable#_verifyAssetNonce: ASSET_NONCE_MISMATCH");
     }
 }

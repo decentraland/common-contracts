@@ -78,7 +78,7 @@ abstract contract NativeMetaTransaction is EIP712Upgradeable {
     }
 
     /// @dev Extract the address of the sender from the msg.data if available. If not, fallback to returning the msg.sender.
-    /// @dev It is vital that the implementator uses this function for meta transaction support.
+    /// @dev It is vital that the implementor uses this function for meta transaction support.
     function _getMsgSender() internal view returns (address sender) {
         if (msg.sender == address(this)) {
             bytes memory array = msg.data;

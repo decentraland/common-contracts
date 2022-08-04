@@ -2,15 +2,15 @@
 
 pragma solidity ^0.8.7;
 
-import "./DummyNativeMetaTransactionImplementator.sol";
+import "./DummyNativeMetaTransactionImplementor.sol";
 
 contract DummyRelayer {
-    DummyNativeMetaTransactionImplementator nmtImplementator;
+    DummyNativeMetaTransactionImplementor nmtImplementor;
 
     bytes public data;
 
-    constructor(DummyNativeMetaTransactionImplementator _nmtImplementator) {
-        nmtImplementator = _nmtImplementator;
+    constructor(DummyNativeMetaTransactionImplementor _nmtImplementor) {
+        nmtImplementor = _nmtImplementor;
     }
 
     function executeAndStoreMetaTransactionResult(
@@ -18,6 +18,6 @@ contract DummyRelayer {
         bytes memory _functionData,
         bytes memory _signature
     ) external {
-        data = nmtImplementator.executeMetaTransaction(_userAddress, _functionData, _signature);
+        data = nmtImplementor.executeMetaTransaction(_userAddress, _functionData, _signature);
     }
 }

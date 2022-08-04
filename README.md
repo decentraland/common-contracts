@@ -56,19 +56,19 @@ npm ci
 ### Compile
 
 ```
-npx hardhat compile
+npm run compile
 ```
 
 ### Test
 
 ```
-npx hardhat test
+npm run test
 ```
 
 Will report gas usage.
 
 ```
-npx hardhat coverage
+npx run test:coverage
 ```
 
 Will report coverage in the `coverage` directory.

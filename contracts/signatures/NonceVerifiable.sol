@@ -19,9 +19,9 @@ abstract contract NonceVerifiable is OwnableUpgradeable {
     /// @custom:schema (contract address -> token id -> signer address -> nonce)
     mapping(address => mapping(uint256 => mapping(address => uint256))) public assetNonce;
 
-    event ContractNonceUpdated(uint256 _value, address _sender);
-    event SignerNonceUpdated(uint256 _value, address _signer, address _sender);
-    event AssetNonceUpdated(uint256 _value, address _contractAddress, uint256 _tokenId, address _signer, address _sender);
+    event ContractNonceUpdated(uint256 _value, address indexed _sender);
+    event SignerNonceUpdated(uint256 _value, address indexed _signer, address indexed _sender);
+    event AssetNonceUpdated(uint256 _value, address indexed _contractAddress, uint256 indexed _tokenId, address indexed _signer, address _sender);
 
     function __NonceVerifiable_init() internal onlyInitializing {
         __Ownable_init();

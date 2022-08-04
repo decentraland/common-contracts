@@ -103,11 +103,11 @@ describe('NativeMetaTransaction', () => {
       const metaTxFunctionData = getMetaTxFunctionData(abi, 'increaseCounter', [10])
       const metaTxSignature = await getMetaTxSignature(user, nmtImplementor, metaTxFunctionData)
 
-      expect(await nmtImplementor.nonces(user.address)).to.be.equal(0)
+      expect(await nmtImplementor.getNonce(user.address)).to.be.equal(0)
 
       await nmtImplementor.connect(deployer).executeMetaTransaction(user.address, metaTxFunctionData, metaTxSignature)
 
-      expect(await nmtImplementor.nonces(user.address)).to.be.equal(1)
+      expect(await nmtImplementor.getNonce(user.address)).to.be.equal(1)
     })
 
     it('should return the relayed function transaction response data', async () => {

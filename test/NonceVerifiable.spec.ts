@@ -51,9 +51,9 @@ describe('NonceVerifiable', () => {
 
   describe('bumpContractNonce', () => {
     it('should increase the contract nonce by 1', async () => {
-      expect(await contract.contractNonce()).to.be.equal(0)
+      expect(await contract.getContractNonce()).to.be.equal(0)
       await contract.connect(owner).bumpContractNonce()
-      expect(await contract.contractNonce()).to.be.equal(1)
+      expect(await contract.getContractNonce()).to.be.equal(1)
     })
 
     it('should emit an event regarding the contract nonce update', async () => {
@@ -67,9 +67,9 @@ describe('NonceVerifiable', () => {
 
   describe('bumpSignerNonce', () => {
     it('should increase the signer nonce by 1', async () => {
-      expect(await contract.signerNonce(signer.address)).to.be.equal(0)
+      expect(await contract.getSignerNonce(signer.address)).to.be.equal(0)
       await contract.connect(signer).bumpSignerNonce()
-      expect(await contract.signerNonce(signer.address)).to.be.equal(1)
+      expect(await contract.getSignerNonce(signer.address)).to.be.equal(1)
     })
 
     it('should emit an event regarding the contract nonce update', async () => {
@@ -79,9 +79,9 @@ describe('NonceVerifiable', () => {
 
   describe('bumpAssetNonce', () => {
     it('should increase the asset nonce by 1', async () => {
-      expect(await contract.assetNonce(extra.address, 0, signer.address)).to.be.equal(0)
+      expect(await contract.getAssetNonce(extra.address, 0, signer.address)).to.be.equal(0)
       await contract.connect(signer).bumpAssetNonce(extra.address, 0)
-      expect(await contract.assetNonce(extra.address, 0, signer.address)).to.be.equal(1)
+      expect(await contract.getAssetNonce(extra.address, 0, signer.address)).to.be.equal(1)
     })
 
     it('should emit an event regarding the contract nonce update', async () => {

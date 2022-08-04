@@ -9,7 +9,7 @@ abstract contract ContractNonceVerifiable is OwnableUpgradeable {
     /// Updating it will invalidate all signatures created with the previous value on a contract level.
     uint256 private contractNonce;
 
-    event ContractNonceUpdated(uint256 _from, uint256 _to, address _sender);
+    event ContractNonceUpdated(uint256 _newNonce, address _sender);
 
     function __ContractNonceVerifiable_init() internal onlyInitializing {
         __Ownable_init();
@@ -30,7 +30,7 @@ abstract contract ContractNonceVerifiable is OwnableUpgradeable {
 
     /// @dev Increase the contract nonce by 1
     function _bumpContractNonce() internal {
-        emit ContractNonceUpdated(contractNonce, ++contractNonce, _msgSender());
+        emit ContractNonceUpdated(++contractNonce, _msgSender());
     }
 
     /// @dev Reverts if the provided nonce does not match the contract nonce.

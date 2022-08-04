@@ -10,7 +10,7 @@ abstract contract SignerNonceVerifiable is ContextUpgradeable {
     /// @custom:schema (signer address -> nonce)
     mapping(address => uint256) private signerNonce;
 
-    event SignerNonceUpdated(uint256 _from, uint256 _to, address _signer, address _sender);
+    event SignerNonceUpdated(address indexed _signer, uint256 _newNonce, address _sender);
 
     function __SignerNonceVerifiable_init() internal onlyInitializing {}
 
@@ -30,7 +30,7 @@ abstract contract SignerNonceVerifiable is ContextUpgradeable {
 
     /// @dev Increase the signer nonce by 1
     function _bumpSignerNonce(address _signer) internal {
-        emit SignerNonceUpdated(signerNonce[_signer], ++signerNonce[_signer], _signer, _msgSender());
+        emit SignerNonceUpdated(_signer, ++signerNonce[_signer], _msgSender());
     }
 
     /// @dev Reverts if the provided nonce does not match the signer nonce.

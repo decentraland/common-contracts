@@ -10,7 +10,7 @@ abstract contract AssetNonceVerifiable is ContextUpgradeable {
     /// @custom:schema (contract address -> token id -> signer address -> nonce)
     mapping(address => mapping(uint256 => mapping(address => uint256))) private assetNonce;
 
-    event AssetNonceUpdated(uint256 _from, uint256 _to, address _contractAddress, uint256 _tokenId, address _signer, address _sender);
+    event AssetNonceUpdated(address indexed _signer, address indexed _contractAddress, uint256 indexed _tokenId, uint256 _newNonce, address _sender);
 
     function __AssetNonceVerifiable_init() internal onlyInitializing {}
 
@@ -42,14 +42,7 @@ abstract contract AssetNonceVerifiable is ContextUpgradeable {
         uint256 _tokenId,
         address _signer
     ) internal {
-        emit AssetNonceUpdated(
-            assetNonce[_contractAddress][_tokenId][_signer],
-            ++assetNonce[_contractAddress][_tokenId][_signer],
-            _contractAddress,
-            _tokenId,
-            _signer,
-            _msgSender()
-        );
+        emit AssetNonceUpdated(_signer, _contractAddress, _tokenId, ++assetNonce[_contractAddress][_tokenId][_signer], _msgSender());
     }
 
     /// @dev Reverts if the provided nonce does not match the asset nonce.

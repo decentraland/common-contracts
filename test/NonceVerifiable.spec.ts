@@ -45,7 +45,7 @@ describe('NonceVerifiable', () => {
     })
 
     it('should revert when called after initialization', async () => {
-      await expect(contract.connect(deployer).test__NonceVerifiable_init()).to.be.revertedWith('Initializable: contract is not initializing')
+      await expect(contract.connect(deployer).test__ContractNonceVerifiable_init()).to.be.revertedWith('Initializable: contract is not initializing')
     })
   })
 

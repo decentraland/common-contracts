@@ -2,15 +2,17 @@
 
 pragma solidity ^0.8.7;
 
-import "../signatures/NonceVerifiable.sol";
+import "../signatures/ContractNonceVerifiable.sol";
+import "../signatures/SignerNonceVerifiable.sol";
+import "../signatures/AssetNonceVerifiable.sol";
 
-contract DummyNonceVerifiableImplementor is NonceVerifiable {
+contract DummyNonceVerifiableImplementor is ContractNonceVerifiable, SignerNonceVerifiable, AssetNonceVerifiable {
     function initialize() external initializer {
-        __NonceVerifiable_init();
+        __ContractNonceVerifiable_init();
     }
 
-    function test__NonceVerifiable_init() external {
-        __NonceVerifiable_init();
+    function test__ContractNonceVerifiable_init() external {
+        __ContractNonceVerifiable_init();
     }
 
     function verifyContractNonce(uint256 _nonce) external view {

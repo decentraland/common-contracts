@@ -81,11 +81,8 @@ abstract contract NativeMetaTransaction is EIP712Upgradeable {
     /// @dev It is vital that the implementator uses this function for meta transaction support.
     function _getMsgSender() internal view returns (address sender) {
         if (msg.sender == address(this)) {
-            bytes memory array = msg.data;
-            uint256 index = msg.data.length;
             assembly {
-                // Load the 32 bytes word from memory with the address on the lower 20 bytes, and mask those.
-                sender := and(mload(add(array, index)), 0xffffffffffffffffffffffffffffffffffffffff)
+                sender := shr(96, calldataload(sub(calldatasize(), 20)))
             }
         } else {
             sender = msg.sender;

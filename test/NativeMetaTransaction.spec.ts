@@ -44,7 +44,7 @@ describe('NativeMetaTransaction', () => {
 
       nameAndVersionHashes = await nmtImplementor.getNameAndVersionHash()
 
-      expect(nameAndVersionHashes[0]).to.be.equal('0x6baad1a72bd9870da55684691faafc1a398ac29693b22f98f50df610295a1a47')
+      expect(nameAndVersionHashes[0]).to.be.equal('0x6bf9d3b058d3ba7d7532b3d9045ec9ccd0b6714f631fe5851085da8ac7079798')
       expect(nameAndVersionHashes[1]).to.be.equal('0xc89efdaa54c0f20c7adf612882df0950f5a951637e0307cdcb4c672f298b8bc6')
     })
 

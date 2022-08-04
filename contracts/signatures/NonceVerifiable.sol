@@ -74,12 +74,12 @@ abstract contract NonceVerifiable is OwnableUpgradeable {
 
     /// @dev Reverts if the provided nonce does not match the contract nonce.
     function _verifyContractNonce(uint256 _nonce) internal view {
-        require(_nonce == contractNonce, "NonceVerifiable#_verifyContractNonce: CONTRACT_NONCE_MISSMATCH");
+        require(_nonce == contractNonce, "NonceVerifiable#_verifyContractNonce: CONTRACT_NONCE_MISMATCH");
     }
 
     /// @dev Reverts if the provided nonce does not match the signer nonce.
     function _verifySignerNonce(address _signer, uint256 _nonce) internal view {
-        require(_nonce == signerNonce[_signer], "NonceVerifiable#_verifySignerNonce: SIGNER_NONCE_MISSMATCH");
+        require(_nonce == signerNonce[_signer], "NonceVerifiable#_verifySignerNonce: SIGNER_NONCE_MISMATCH");
     }
 
     /// @dev Reverts if the provided nonce does not match the asset nonce.
@@ -89,6 +89,6 @@ abstract contract NonceVerifiable is OwnableUpgradeable {
         address _signer,
         uint256 _nonce
     ) internal view {
-        require(_nonce == assetNonce[_contractAddress][_tokenId][_signer], "NonceVerifiable#_verifyAssetNonce: ASSET_NONCE_MISSMATCH");
+        require(_nonce == assetNonce[_contractAddress][_tokenId][_signer], "NonceVerifiable#_verifyAssetNonce: ASSET_NONCE_MISMATCH");
     }
 }

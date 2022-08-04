@@ -19,9 +19,9 @@ abstract contract NonceVerifiable is OwnableUpgradeable {
     /// @custom:schema (contract address -> token id -> signer address -> nonce)
     mapping(address => mapping(uint256 => mapping(address => uint256))) private assetNonce;
 
-    event ContractNonceUpdated(address indexed _sender, uint256 _newNonce);
-    event SignerNonceUpdated(address indexed _sender, address indexed _signer, uint256 _newNonce);
-    event AssetNonceUpdated(address indexed _sender, address indexed _signer, address indexed _contractAddress, uint256 _tokenId, uint256 _newNonce);
+    event ContractNonceUpdated(uint256 _newNonce, address _sender);
+    event SignerNonceUpdated(address indexed _signer, uint256 _newNonce, address _sender);
+    event AssetNonceUpdated(address indexed _signer, address indexed _contractAddress, uint256 indexed _tokenId, uint256 _newNonce, address _sender);
 
     function __NonceVerifiable_init() internal onlyInitializing {
         __Ownable_init();
@@ -74,12 +74,12 @@ abstract contract NonceVerifiable is OwnableUpgradeable {
 
     /// @dev Increase the contract nonce by 1
     function _bumpContractNonce() internal {
-        emit ContractNonceUpdated(_msgSender(), ++contractNonce);
+        emit ContractNonceUpdated(++contractNonce, _msgSender());
     }
 
     /// @dev Increase the signer nonce by 1
     function _bumpSignerNonce(address _signer) internal {
-        emit SignerNonceUpdated(_msgSender(), _signer, ++signerNonce[_signer]);
+        emit SignerNonceUpdated(_signer, ++signerNonce[_signer], _msgSender());
     }
 
     /// @dev Increase the asset nonce by 1
@@ -88,7 +88,7 @@ abstract contract NonceVerifiable is OwnableUpgradeable {
         uint256 _tokenId,
         address _signer
     ) internal {
-        emit AssetNonceUpdated(_msgSender(), _signer, _contractAddress, _tokenId, ++assetNonce[_contractAddress][_tokenId][_signer]);
+        emit AssetNonceUpdated(_signer, _contractAddress, _tokenId, ++assetNonce[_contractAddress][_tokenId][_signer], _msgSender());
     }
 
     /// @dev Reverts if the provided nonce does not match the contract nonce.

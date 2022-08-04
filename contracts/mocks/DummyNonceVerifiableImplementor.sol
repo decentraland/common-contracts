@@ -23,6 +23,16 @@ contract DummyNonceVerifiableImplementor is ContractNonceVerifiable, SignerNonce
         _verifySignerNonce(_signer, _nonce);
     }
 
+    function bumpAll(
+        address _contractAddress,
+        uint256 _tokenId,
+        address _signer
+    ) external {
+        _bumpContractNonce();
+        _bumpSignerNonce(_signer);
+        _bumpAssetNonce(_contractAddress, _tokenId, _signer);
+    }
+
     function verifyAssetNonce(
         address _contractAddress,
         uint256 _tokenId,

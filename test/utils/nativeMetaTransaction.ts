@@ -1,6 +1,6 @@
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
 import { ethers } from 'hardhat'
-import { DummyNativeMetaTransactionImplementator } from '../../typechain-types'
+import { DummyNativeMetaTransactionImplementor } from '../../typechain-types'
 
 type InterfaceType = typeof ethers.utils.Interface
 type ABI = ConstructorParameters<InterfaceType>[0]
@@ -13,7 +13,7 @@ export const getMetaTxFunctionData = (abi: ABI, functionFragment: FunctionFragme
 
 export const getMetaTxSignature = async (
   signer: SignerWithAddress,
-  contract: DummyNativeMetaTransactionImplementator,
+  contract: DummyNativeMetaTransactionImplementor,
   functionData: string
 ): Promise<string> => {
   const params = {
@@ -25,7 +25,7 @@ export const getMetaTxSignature = async (
   return signer._signTypedData(
     {
       chainId: 31337,
-      name: 'DummyNativeMetaTransactionImplementator',
+      name: 'DummyNativeMetaTransactionImplementor',
       verifyingContract: contract.address,
       version: '1',
     },

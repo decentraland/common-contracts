@@ -57,7 +57,7 @@ describe('NonceVerifiable', () => {
     })
 
     it('should emit an event regarding the contract nonce update', async () => {
-      await expect(contract.connect(owner).bumpContractNonce()).to.emit(contract, 'ContractNonceUpdated').withArgs(0, 1, owner.address)
+      await expect(contract.connect(owner).bumpContractNonce()).to.emit(contract, 'ContractNonceUpdated').withArgs(1, owner.address)
     })
 
     it('should revert if the caller is not the contract owner', async () => {
@@ -73,7 +73,7 @@ describe('NonceVerifiable', () => {
     })
 
     it('should emit an event regarding the contract nonce update', async () => {
-      await expect(contract.connect(signer).bumpSignerNonce()).to.emit(contract, 'SignerNonceUpdated').withArgs(0, 1, signer.address, signer.address)
+      await expect(contract.connect(signer).bumpSignerNonce()).to.emit(contract, 'SignerNonceUpdated').withArgs(1, signer.address, signer.address)
     })
   })
 
@@ -87,7 +87,7 @@ describe('NonceVerifiable', () => {
     it('should emit an event regarding the contract nonce update', async () => {
       await expect(contract.connect(signer).bumpAssetNonce(extra.address, 0))
         .to.emit(contract, 'AssetNonceUpdated')
-        .withArgs(0, 1, extra.address, 0, signer.address, signer.address)
+        .withArgs(1, extra.address, 0, signer.address, signer.address)
     })
   })
 

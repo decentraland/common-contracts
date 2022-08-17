@@ -19,7 +19,7 @@ abstract contract ContractNonceVerifiable is OwnableUpgradeable {
 
     /// @notice Get the current contract nonce.
     /// @return The current contract nonce.
-    function getContractNonce() external view returns (uint256) {
+    function getContractNonce() public view returns (uint256) {
         return contractNonce;
     }
 

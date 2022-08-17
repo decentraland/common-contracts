@@ -19,7 +19,7 @@ abstract contract SignerNonceVerifiable is ContextUpgradeable {
     /// @notice Get the current signer nonce.
     /// @param _signer The address of the signer.
     /// @return The nonce of the given signer.
-    function getSignerNonce(address _signer) external view returns (uint256) {
+    function getSignerNonce(address _signer) public view returns (uint256) {
         return signerNonce[_signer];
     }
 

@@ -25,7 +25,7 @@ abstract contract AssetNonceVerifiable is ContextUpgradeable {
         address _contractAddress,
         uint256 _tokenId,
         address _signer
-    ) external view returns (uint256) {
+    ) public view returns (uint256) {
         return assetNonce[_contractAddress][_tokenId][_signer];
     }
 

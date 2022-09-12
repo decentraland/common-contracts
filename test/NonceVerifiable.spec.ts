@@ -45,23 +45,23 @@ describe('NonceVerifiable', () => {
     })
 
     it('should revert when called after initialization', async () => {
-      await expect(contract.connect(deployer).test__ContractNonceVerifiable_init()).to.be.revertedWith('Initializable: contract is not initializing')
+      await expect(contract.connect(deployer).test__ContractVerificationIndex_init()).to.be.revertedWith('Initializable: contract is not initializing')
     })
   })
 
-  describe('bumpContractNonce', () => {
+  describe('bumpContractVerificationIndex', () => {
     it('should increase the contract nonce by 1', async () => {
-      expect(await contract.getContractNonce()).to.be.equal(0)
-      await contract.connect(owner).bumpContractNonce()
-      expect(await contract.getContractNonce()).to.be.equal(1)
+      expect(await contract.getContractVerificationIndex()).to.be.equal(0)
+      await contract.connect(owner).bumpContractVerificationIndex()
+      expect(await contract.getContractVerificationIndex()).to.be.equal(1)
     })
 
     it('should emit an event regarding the contract nonce update', async () => {
-      await expect(contract.connect(owner).bumpContractNonce()).to.emit(contract, 'ContractNonceUpdated').withArgs(1, owner.address)
+      await expect(contract.connect(owner).bumpContractVerificationIndex()).to.emit(contract, 'ContractVerificationIndexUpdated').withArgs(1, owner.address)
     })
 
     it('should revert if the caller is not the contract owner', async () => {
-      await expect(contract.connect(extra).bumpContractNonce()).to.be.revertedWith('Ownable: caller is not the owner')
+      await expect(contract.connect(extra).bumpContractVerificationIndex()).to.be.revertedWith('Ownable: caller is not the owner')
     })
   })
 
@@ -91,15 +91,15 @@ describe('NonceVerifiable', () => {
     })
   })
 
-  describe('_verifyContractNonce', () => {
-    const err = 'ContractNonceVerifiable#_verifyContractNonce: CONTRACT_NONCE_MISMATCH'
+  describe('_verifyContractVerificationIndex', () => {
+    const err = 'ContractVerificationIndex#_verifyContractVerificationIndex: CONTRACT_VERIFICATION_INDEX_MISMATCH'
 
     it('should revert when the provided nonce does not match with the contract nonce', async () => {
-      await expect(contract.verifyContractNonce(1)).to.be.revertedWith(err)
+      await expect(contract.verifyContractVerificationIndex(1)).to.be.revertedWith(err)
     })
 
     it('should NOT revert when the provided nonce matches with the contract nonce', async () => {
-      await expect(contract.verifyContractNonce(0)).to.not.be.revertedWith(err)
+      await expect(contract.verifyContractVerificationIndex(0)).to.not.be.revertedWith(err)
     })
   })
 
@@ -128,9 +128,9 @@ describe('NonceVerifiable', () => {
   })
 
   describe('bumpAll (mock)', () => {
-    it('should emit ContractNonceUpdated, SignerNonceUpdated and AssetVerificationIndexUpdated events', async () => {
+    it('should emit ContractVerificationIndexUpdated, SignerNonceUpdated and AssetVerificationIndexUpdated events', async () => {
       await expect(contract.connect(owner).bumpAll(extra.address, 0, signer.address))
-        .to.emit(contract, 'ContractNonceUpdated')
+        .to.emit(contract, 'ContractVerificationIndexUpdated')
         .withArgs(1, owner.address)
         .and.to.emit(contract, 'SignerNonceUpdated')
         .withArgs(signer.address, 1, owner.address)

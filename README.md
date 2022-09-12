@@ -30,7 +30,7 @@ What are meta transactions?
 
 They provide a way for users to enjoy "gasless" transactions by just signing the data of the transaction they want to execute and letting a relayer, which is the one that ends up paying the fees, to execute it.
 
-### ContractNonceVerifiable, SignerNonceVerifiable, AssetVerificationIndex
+### ContractVerificationIndex, SignerNonceVerifiable, AssetVerificationIndex
 
 Allows signatures to be invalidated on 3 different levels. Contract, Signer and Asset levels.
 

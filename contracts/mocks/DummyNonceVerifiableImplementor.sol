@@ -2,21 +2,21 @@
 
 pragma solidity ^0.8.7;
 
-import "../signatures/ContractNonceVerifiable.sol";
+import "../signatures/ContractVerificationIndex.sol";
 import "../signatures/SignerNonceVerifiable.sol";
 import "../signatures/AssetVerificationIndex.sol";
 
-contract DummyNonceVerifiableImplementor is ContractNonceVerifiable, SignerNonceVerifiable, AssetVerificationIndex {
+contract DummyNonceVerifiableImplementor is ContractVerificationIndex, SignerNonceVerifiable, AssetVerificationIndex {
     function initialize() external initializer {
-        __ContractNonceVerifiable_init();
+        __ContractVerificationIndex_init();
     }
 
-    function test__ContractNonceVerifiable_init() external {
-        __ContractNonceVerifiable_init();
+    function test__ContractVerificationIndex_init() external {
+        __ContractVerificationIndex_init();
     }
 
-    function verifyContractNonce(uint256 _index) external view {
-        _verifyContractNonce(_index);
+    function verifyContractVerificationIndex(uint256 _index) external view {
+        _verifyContractVerificationIndex(_index);
     }
 
     function verifySignerNonce(address _signer, uint256 _index) external view {
@@ -28,7 +28,7 @@ contract DummyNonceVerifiableImplementor is ContractNonceVerifiable, SignerNonce
         uint256 _tokenId,
         address _signer
     ) external {
-        _bumpContractNonce();
+        _bumpContractVerificationIndex();
         _bumpSignerNonce(_signer);
         _bumpAssetVerificationIndex(_contractAddress, _tokenId, _signer);
     }

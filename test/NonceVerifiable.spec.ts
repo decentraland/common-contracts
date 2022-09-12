@@ -3,7 +3,7 @@ import { expect } from 'chai'
 import { ethers } from 'hardhat'
 import { DummyIndexVerificationImplementor, DummyIndexVerificationImplementor__factory } from '../typechain-types'
 
-describe('NonceVerifiable', () => {
+describe('VerificationIndex', () => {
   let deployer: SignerWithAddress
   let owner: SignerWithAddress
   let signer: SignerWithAddress
@@ -39,7 +39,7 @@ describe('NonceVerifiable', () => {
     })
   })
 
-  describe('__NonceVerifiable_init', () => {
+  describe('__ContractVerificationIndex_init', () => {
     it('should set the owner', async () => {
       expect(await contract.owner()).to.be.equal(owner.address)
     })
@@ -50,13 +50,13 @@ describe('NonceVerifiable', () => {
   })
 
   describe('bumpContractVerificationIndex', () => {
-    it('should increase the contract nonce by 1', async () => {
+    it('should increase the contract verification index by 1', async () => {
       expect(await contract.getContractVerificationIndex()).to.be.equal(0)
       await contract.connect(owner).bumpContractVerificationIndex()
       expect(await contract.getContractVerificationIndex()).to.be.equal(1)
     })
 
-    it('should emit an event regarding the contract nonce update', async () => {
+    it('should emit an event regarding the contract verification index update', async () => {
       await expect(contract.connect(owner).bumpContractVerificationIndex()).to.emit(contract, 'ContractVerificationIndexUpdated').withArgs(1, owner.address)
     })
 
@@ -66,25 +66,25 @@ describe('NonceVerifiable', () => {
   })
 
   describe('bumpSignerVerificationIndex', () => {
-    it('should increase the signer nonce by 1', async () => {
+    it('should increase the signer verification index by 1', async () => {
       expect(await contract.getSignerVerificationIndex(signer.address)).to.be.equal(0)
       await contract.connect(signer).bumpSignerVerificationIndex()
       expect(await contract.getSignerVerificationIndex(signer.address)).to.be.equal(1)
     })
 
-    it('should emit an event regarding the contract nonce update', async () => {
+    it('should emit an event regarding the contract verification index update', async () => {
       await expect(contract.connect(signer).bumpSignerVerificationIndex()).to.emit(contract, 'SignerVerificationIndexUpdated').withArgs(signer.address, 1, signer.address)
     })
   })
 
   describe('bumpAssetVerificationIndex', () => {
-    it('should increase the asset nonce by 1', async () => {
+    it('should increase the asset verification index by 1', async () => {
       expect(await contract.getAssetVerificationIndex(extra.address, 0, signer.address)).to.be.equal(0)
       await contract.connect(signer).bumpAssetVerificationIndex(extra.address, 0)
       expect(await contract.getAssetVerificationIndex(extra.address, 0, signer.address)).to.be.equal(1)
     })
 
-    it('should emit an event regarding the contract nonce update', async () => {
+    it('should emit an event regarding the contract verification index update', async () => {
       await expect(contract.connect(signer).bumpAssetVerificationIndex(extra.address, 0))
         .to.emit(contract, 'AssetVerificationIndexUpdated')
         .withArgs(signer.address, extra.address, 0, 1, signer.address)
@@ -94,11 +94,11 @@ describe('NonceVerifiable', () => {
   describe('_verifyContractVerificationIndex', () => {
     const err = 'ContractVerificationIndex#_verifyContractVerificationIndex: CONTRACT_VERIFICATION_INDEX_MISMATCH'
 
-    it('should revert when the provided nonce does not match with the contract nonce', async () => {
+    it('should revert when the provided verification index does not match with the contract verification index', async () => {
       await expect(contract.verifyContractVerificationIndex(1)).to.be.revertedWith(err)
     })
 
-    it('should NOT revert when the provided nonce matches with the contract nonce', async () => {
+    it('should NOT revert when the provided verification index matches with the contract verification index', async () => {
       await expect(contract.verifyContractVerificationIndex(0)).to.not.be.revertedWith(err)
     })
   })
@@ -106,11 +106,11 @@ describe('NonceVerifiable', () => {
   describe('_verifySignerVerificationIndex', () => {
     const err = 'SignerVerificationIndex#_verifySignerVerificationIndex: SIGNER_VERIFICATION_INDEX_MISMATCH'
 
-    it('should revert when the provided nonce does not match with the signer nonce', async () => {
+    it('should revert when the provided verification index does not match with the signer verification index', async () => {
       await expect(contract.verifySignerVerificationIndex(signer.address, 1)).to.be.revertedWith(err)
     })
 
-    it('should NOT revert when the provided nonce matches with the signer nonce', async () => {
+    it('should NOT revert when the provided verification index matches with the signer verification index', async () => {
       await expect(contract.verifySignerVerificationIndex(signer.address, 0)).to.not.be.revertedWith(err)
     })
   })
@@ -118,11 +118,11 @@ describe('NonceVerifiable', () => {
   describe('_verifyAssetVerificationIndex', () => {
     const err = 'AssetVerificationIndex#_verifyAssetVerificationIndex: ASSET_VERIFICATION_INDEX_MISMATCH'
 
-    it('should revert when the provided nonce does not match with the asset nonce', async () => {
+    it('should revert when the provided verification index does not match with the asset verification index', async () => {
       await expect(contract.verifyAssetVerificationIndex(extra.address, 0, signer.address, 1)).to.be.revertedWith(err)
     })
 
-    it('should NOT revert when the provided nonce matches with the asset nonce', async () => {
+    it('should NOT revert when the provided verification index matches with the asset verification index', async () => {
       await expect(contract.verifyAssetVerificationIndex(extra.address, 0, signer.address, 0)).to.not.be.revertedWith(err)
     })
   })

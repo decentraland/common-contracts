@@ -17,7 +17,9 @@ npm install -D @openzeppelin/contracts-upgradeable@4.5.0
 ## Usage
 
 ```
-import "@dcl/common-contracts/signatures/NonceVerifiable.sol";
+import "@dcl/common-contracts/signatures/ContractVerificationIndex.sol";
+import "@dcl/common-contracts/signatures/SignerVerificationIndex.sol";
+import "@dcl/common-contracts/signatures/AssetVerificationIndex.sol";
 ```
 
 ## Contracts
@@ -34,9 +36,9 @@ They provide a way for users to enjoy "gasless" transactions by just signing the
 
 Allows signatures to be invalidated on 3 different levels. Contract, Signer and Asset levels.
 
-The contract should be queried for the current nonces on each level and use those nonces to create a signature.
+The contract should be queried for the current verification indexes on each level and use those indexes to create a signature.
 
-When the signatures are recovered, they have to be verified with these nonces.
+When the signatures are recovered, they have to be verified with these indexes.
 
 They can be updated in order to invalidate signatures that were created with previous values.
 

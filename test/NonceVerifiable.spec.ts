@@ -65,15 +65,15 @@ describe('NonceVerifiable', () => {
     })
   })
 
-  describe('bumpSignerNonce', () => {
+  describe('bumpSignerVerificationIndex', () => {
     it('should increase the signer nonce by 1', async () => {
-      expect(await contract.getSignerNonce(signer.address)).to.be.equal(0)
-      await contract.connect(signer).bumpSignerNonce()
-      expect(await contract.getSignerNonce(signer.address)).to.be.equal(1)
+      expect(await contract.getSignerVerificationIndex(signer.address)).to.be.equal(0)
+      await contract.connect(signer).bumpSignerVerificationIndex()
+      expect(await contract.getSignerVerificationIndex(signer.address)).to.be.equal(1)
     })
 
     it('should emit an event regarding the contract nonce update', async () => {
-      await expect(contract.connect(signer).bumpSignerNonce()).to.emit(contract, 'SignerNonceUpdated').withArgs(signer.address, 1, signer.address)
+      await expect(contract.connect(signer).bumpSignerVerificationIndex()).to.emit(contract, 'SignerVerificationIndexUpdated').withArgs(signer.address, 1, signer.address)
     })
   })
 
@@ -103,15 +103,15 @@ describe('NonceVerifiable', () => {
     })
   })
 
-  describe('_verifySignerNonce', () => {
-    const err = 'SignerNonceVerifiable#_verifySignerNonce: SIGNER_NONCE_MISMATCH'
+  describe('_verifySignerVerificationIndex', () => {
+    const err = 'SignerVerificationIndex#_verifySignerVerificationIndex: SIGNER_VERIFICATION_INDEX_MISMATCH'
 
     it('should revert when the provided nonce does not match with the signer nonce', async () => {
-      await expect(contract.verifySignerNonce(signer.address, 1)).to.be.revertedWith(err)
+      await expect(contract.verifySignerVerificationIndex(signer.address, 1)).to.be.revertedWith(err)
     })
 
     it('should NOT revert when the provided nonce matches with the signer nonce', async () => {
-      await expect(contract.verifySignerNonce(signer.address, 0)).to.not.be.revertedWith(err)
+      await expect(contract.verifySignerVerificationIndex(signer.address, 0)).to.not.be.revertedWith(err)
     })
   })
 
@@ -128,11 +128,11 @@ describe('NonceVerifiable', () => {
   })
 
   describe('bumpAll (mock)', () => {
-    it('should emit ContractVerificationIndexUpdated, SignerNonceUpdated and AssetVerificationIndexUpdated events', async () => {
+    it('should emit ContractVerificationIndexUpdated, SignerVerificationIndexUpdated and AssetVerificationIndexUpdated events', async () => {
       await expect(contract.connect(owner).bumpAll(extra.address, 0, signer.address))
         .to.emit(contract, 'ContractVerificationIndexUpdated')
         .withArgs(1, owner.address)
-        .and.to.emit(contract, 'SignerNonceUpdated')
+        .and.to.emit(contract, 'SignerVerificationIndexUpdated')
         .withArgs(signer.address, 1, owner.address)
         .and.to.emit(contract, 'AssetVerificationIndexUpdated')
         .withArgs(signer.address, extra.address, 0, 1, owner.address)

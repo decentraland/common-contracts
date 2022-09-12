@@ -3,10 +3,10 @@
 pragma solidity ^0.8.7;
 
 import "../signatures/ContractVerificationIndex.sol";
-import "../signatures/SignerNonceVerifiable.sol";
+import "../signatures/SignerVerificationIndex.sol";
 import "../signatures/AssetVerificationIndex.sol";
 
-contract DummyNonceVerifiableImplementor is ContractVerificationIndex, SignerNonceVerifiable, AssetVerificationIndex {
+contract DummyNonceVerifiableImplementor is ContractVerificationIndex, SignerVerificationIndex, AssetVerificationIndex {
     function initialize() external initializer {
         __ContractVerificationIndex_init();
     }
@@ -19,8 +19,8 @@ contract DummyNonceVerifiableImplementor is ContractVerificationIndex, SignerNon
         _verifyContractVerificationIndex(_index);
     }
 
-    function verifySignerNonce(address _signer, uint256 _index) external view {
-        _verifySignerNonce(_signer, _index);
+    function verifySignerVerificationIndex(address _signer, uint256 _index) external view {
+        _verifySignerVerificationIndex(_signer, _index);
     }
 
     function bumpAll(
@@ -29,7 +29,7 @@ contract DummyNonceVerifiableImplementor is ContractVerificationIndex, SignerNon
         address _signer
     ) external {
         _bumpContractVerificationIndex();
-        _bumpSignerNonce(_signer);
+        _bumpSignerVerificationIndex(_signer);
         _bumpAssetVerificationIndex(_contractAddress, _tokenId, _signer);
     }
 

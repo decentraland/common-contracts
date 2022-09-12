@@ -10,7 +10,7 @@ abstract contract SignerNonceVerifiable is ContextUpgradeable {
     /// @custom:schema (signer address -> nonce)
     mapping(address => uint256) private signerNonce;
 
-    event SignerNonceUpdated(address indexed _signer, uint256 _newNonce, address _sender);
+    event SignerNonceUpdated(address indexed _signer, uint256 _newIndex, address _sender);
 
     function __SignerNonceVerifiable_init() internal onlyInitializing {}
 
@@ -34,7 +34,7 @@ abstract contract SignerNonceVerifiable is ContextUpgradeable {
     }
 
     /// @dev Reverts if the provided nonce does not match the signer nonce.
-    function _verifySignerNonce(address _signer, uint256 _nonce) internal view {
-        require(_nonce == signerNonce[_signer], "SignerNonceVerifiable#_verifySignerNonce: SIGNER_NONCE_MISMATCH");
+    function _verifySignerNonce(address _signer, uint256 _index) internal view {
+        require(_index == signerNonce[_signer], "SignerNonceVerifiable#_verifySignerNonce: SIGNER_NONCE_MISMATCH");
     }
 }

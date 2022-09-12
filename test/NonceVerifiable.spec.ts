@@ -77,16 +77,16 @@ describe('NonceVerifiable', () => {
     })
   })
 
-  describe('bumpAssetNonce', () => {
+  describe('bumpAssetVerificationIndex', () => {
     it('should increase the asset nonce by 1', async () => {
-      expect(await contract.getAssetNonce(extra.address, 0, signer.address)).to.be.equal(0)
-      await contract.connect(signer).bumpAssetNonce(extra.address, 0)
-      expect(await contract.getAssetNonce(extra.address, 0, signer.address)).to.be.equal(1)
+      expect(await contract.getAssetVerificationIndex(extra.address, 0, signer.address)).to.be.equal(0)
+      await contract.connect(signer).bumpAssetVerificationIndex(extra.address, 0)
+      expect(await contract.getAssetVerificationIndex(extra.address, 0, signer.address)).to.be.equal(1)
     })
 
     it('should emit an event regarding the contract nonce update', async () => {
-      await expect(contract.connect(signer).bumpAssetNonce(extra.address, 0))
-        .to.emit(contract, 'AssetNonceUpdated')
+      await expect(contract.connect(signer).bumpAssetVerificationIndex(extra.address, 0))
+        .to.emit(contract, 'AssetVerificationIndexUpdated')
         .withArgs(signer.address, extra.address, 0, 1, signer.address)
     })
   })
@@ -115,26 +115,26 @@ describe('NonceVerifiable', () => {
     })
   })
 
-  describe('_verifyAssetNonce', () => {
-    const err = 'AssetNonceVerifiable#_verifyAssetNonce: ASSET_NONCE_MISMATCH'
+  describe('_verifyAssetVerificationIndex', () => {
+    const err = 'AssetVerificationIndex#_verifyAssetVerificationIndex: ASSET_VERIFICATION_INDEX_MISMATCH'
 
     it('should revert when the provided nonce does not match with the asset nonce', async () => {
-      await expect(contract.verifyAssetNonce(extra.address, 0, signer.address, 1)).to.be.revertedWith(err)
+      await expect(contract.verifyAssetVerificationIndex(extra.address, 0, signer.address, 1)).to.be.revertedWith(err)
     })
 
     it('should NOT revert when the provided nonce matches with the asset nonce', async () => {
-      await expect(contract.verifyAssetNonce(extra.address, 0, signer.address, 0)).to.not.be.revertedWith(err)
+      await expect(contract.verifyAssetVerificationIndex(extra.address, 0, signer.address, 0)).to.not.be.revertedWith(err)
     })
   })
 
   describe('bumpAll (mock)', () => {
-    it('should emit ContractNonceUpdated, SignerNonceUpdated and AssetNonceUpdated events', async () => {
+    it('should emit ContractNonceUpdated, SignerNonceUpdated and AssetVerificationIndexUpdated events', async () => {
       await expect(contract.connect(owner).bumpAll(extra.address, 0, signer.address))
         .to.emit(contract, 'ContractNonceUpdated')
         .withArgs(1, owner.address)
         .and.to.emit(contract, 'SignerNonceUpdated')
         .withArgs(signer.address, 1, owner.address)
-        .and.to.emit(contract, 'AssetNonceUpdated')
+        .and.to.emit(contract, 'AssetVerificationIndexUpdated')
         .withArgs(signer.address, extra.address, 0, 1, owner.address)
     })
   })

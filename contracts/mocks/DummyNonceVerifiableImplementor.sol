@@ -4,9 +4,9 @@ pragma solidity ^0.8.7;
 
 import "../signatures/ContractNonceVerifiable.sol";
 import "../signatures/SignerNonceVerifiable.sol";
-import "../signatures/AssetNonceVerifiable.sol";
+import "../signatures/AssetVerificationIndex.sol";
 
-contract DummyNonceVerifiableImplementor is ContractNonceVerifiable, SignerNonceVerifiable, AssetNonceVerifiable {
+contract DummyNonceVerifiableImplementor is ContractNonceVerifiable, SignerNonceVerifiable, AssetVerificationIndex {
     function initialize() external initializer {
         __ContractNonceVerifiable_init();
     }
@@ -15,12 +15,12 @@ contract DummyNonceVerifiableImplementor is ContractNonceVerifiable, SignerNonce
         __ContractNonceVerifiable_init();
     }
 
-    function verifyContractNonce(uint256 _nonce) external view {
-        _verifyContractNonce(_nonce);
+    function verifyContractNonce(uint256 _index) external view {
+        _verifyContractNonce(_index);
     }
 
-    function verifySignerNonce(address _signer, uint256 _nonce) external view {
-        _verifySignerNonce(_signer, _nonce);
+    function verifySignerNonce(address _signer, uint256 _index) external view {
+        _verifySignerNonce(_signer, _index);
     }
 
     function bumpAll(
@@ -30,15 +30,15 @@ contract DummyNonceVerifiableImplementor is ContractNonceVerifiable, SignerNonce
     ) external {
         _bumpContractNonce();
         _bumpSignerNonce(_signer);
-        _bumpAssetNonce(_contractAddress, _tokenId, _signer);
+        _bumpAssetVerificationIndex(_contractAddress, _tokenId, _signer);
     }
 
-    function verifyAssetNonce(
+    function verifyAssetVerificationIndex(
         address _contractAddress,
         uint256 _tokenId,
         address _signer,
-        uint256 _nonce
+        uint256 _index
     ) external view {
-        _verifyAssetNonce(_contractAddress, _tokenId, _signer, _nonce);
+        _verifyAssetVerificationIndex(_contractAddress, _tokenId, _signer, _index);
     }
 }

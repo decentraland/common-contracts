@@ -1,7 +1,7 @@
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
 import { expect } from 'chai'
 import { ethers } from 'hardhat'
-import { DummyNonceVerifiableImplementor, DummyNonceVerifiableImplementor__factory } from '../typechain-types'
+import { DummyIndexVerificationImplementor, DummyIndexVerificationImplementor__factory } from '../typechain-types'
 
 describe('NonceVerifiable', () => {
   let deployer: SignerWithAddress
@@ -9,13 +9,13 @@ describe('NonceVerifiable', () => {
   let signer: SignerWithAddress
   let extra: SignerWithAddress
 
-  let contractFactory: DummyNonceVerifiableImplementor__factory
-  let contract: DummyNonceVerifiableImplementor
+  let contractFactory: DummyIndexVerificationImplementor__factory
+  let contract: DummyIndexVerificationImplementor
 
   beforeEach(async () => {
     ;[deployer, owner, signer, extra] = await ethers.getSigners()
 
-    contractFactory = await ethers.getContractFactory('DummyNonceVerifiableImplementor')
+    contractFactory = await ethers.getContractFactory('DummyIndexVerificationImplementor')
     contract = await contractFactory.deploy()
 
     await contract.connect(deployer).initialize()
@@ -24,7 +24,7 @@ describe('NonceVerifiable', () => {
 
   describe('initialize', () => {
     it('should set the owner as the caller after initializing', async () => {
-      contractFactory = await ethers.getContractFactory('DummyNonceVerifiableImplementor')
+      contractFactory = await ethers.getContractFactory('DummyIndexVerificationImplementor')
       contract = await contractFactory.deploy()
 
       expect(await contract.owner()).to.be.equal('0x0000000000000000000000000000000000000000')

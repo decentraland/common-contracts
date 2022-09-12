@@ -6,7 +6,7 @@ import "../signatures/ContractVerificationIndex.sol";
 import "../signatures/SignerVerificationIndex.sol";
 import "../signatures/AssetVerificationIndex.sol";
 
-contract DummyNonceVerifiableImplementor is ContractVerificationIndex, SignerVerificationIndex, AssetVerificationIndex {
+contract DummyIndexVerificationImplementor is ContractVerificationIndex, SignerVerificationIndex, AssetVerificationIndex {
     function initialize() external initializer {
         __ContractVerificationIndex_init();
     }

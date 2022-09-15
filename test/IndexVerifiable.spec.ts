@@ -50,13 +50,13 @@ describe('IndexVerifiable', () => {
   })
 
   describe('bumpContractIndex', () => {
-    it('should increase the contract verification index by 1', async () => {
+    it('should increase the contract index by 1', async () => {
       expect(await contract.getContractIndex()).to.be.equal(0)
       await contract.connect(owner).bumpContractIndex()
       expect(await contract.getContractIndex()).to.be.equal(1)
     })
 
-    it('should emit an event regarding the contract verification index update', async () => {
+    it('should emit an event regarding the contract index update', async () => {
       await expect(contract.connect(owner).bumpContractIndex()).to.emit(contract, 'ContractIndexUpdated').withArgs(1, owner.address)
     })
 
@@ -66,25 +66,25 @@ describe('IndexVerifiable', () => {
   })
 
   describe('bumpSignerIndex', () => {
-    it('should increase the signer verification index by 1', async () => {
+    it('should increase the signer index by 1', async () => {
       expect(await contract.getSignerIndex(signer.address)).to.be.equal(0)
       await contract.connect(signer).bumpSignerIndex()
       expect(await contract.getSignerIndex(signer.address)).to.be.equal(1)
     })
 
-    it('should emit an event regarding the contract verification index update', async () => {
+    it('should emit an event regarding the contract index update', async () => {
       await expect(contract.connect(signer).bumpSignerIndex()).to.emit(contract, 'SignerIndexUpdated').withArgs(signer.address, 1, signer.address)
     })
   })
 
   describe('bumpAssetIndex', () => {
-    it('should increase the asset verification index by 1', async () => {
+    it('should increase the asset index by 1', async () => {
       expect(await contract.getAssetIndex(extra.address, 0, signer.address)).to.be.equal(0)
       await contract.connect(signer).bumpAssetIndex(extra.address, 0)
       expect(await contract.getAssetIndex(extra.address, 0, signer.address)).to.be.equal(1)
     })
 
-    it('should emit an event regarding the contract verification index update', async () => {
+    it('should emit an event regarding the contract index update', async () => {
       await expect(contract.connect(signer).bumpAssetIndex(extra.address, 0))
         .to.emit(contract, 'AssetIndexUpdated')
         .withArgs(signer.address, extra.address, 0, 1, signer.address)
@@ -94,11 +94,11 @@ describe('IndexVerifiable', () => {
   describe('_verifyContractIndex', () => {
     const err = 'ContractIndexVerifiable#_verifyContractIndex: CONTRACT_INDEX_MISMATCH'
 
-    it('should revert when the provided verification index does not match with the contract verification index', async () => {
+    it('should revert when the provided index does not match with the contract index', async () => {
       await expect(contract.verifyContractIndex(1)).to.be.revertedWith(err)
     })
 
-    it('should NOT revert when the provided verification index matches with the contract verification index', async () => {
+    it('should NOT revert when the provided index matches with the contract index', async () => {
       await expect(contract.verifyContractIndex(0)).to.not.be.revertedWith(err)
     })
   })
@@ -106,11 +106,11 @@ describe('IndexVerifiable', () => {
   describe('_verifySignerIndex', () => {
     const err = 'SignerIndexVerifiable#_verifySignerIndex: SIGNER_INDEX_MISMATCH'
 
-    it('should revert when the provided verification index does not match with the signer verification index', async () => {
+    it('should revert when the provided index does not match with the signer index', async () => {
       await expect(contract.verifySignerIndex(signer.address, 1)).to.be.revertedWith(err)
     })
 
-    it('should NOT revert when the provided verification index matches with the signer verification index', async () => {
+    it('should NOT revert when the provided index matches with the signer index', async () => {
       await expect(contract.verifySignerIndex(signer.address, 0)).to.not.be.revertedWith(err)
     })
   })
@@ -118,11 +118,11 @@ describe('IndexVerifiable', () => {
   describe('_verifyAssetIndex', () => {
     const err = 'AssetIndexVerifiable#_verifyAssetIndex: ASSET_INDEX_MISMATCH'
 
-    it('should revert when the provided verification index does not match with the asset verification index', async () => {
+    it('should revert when the provided index does not match with the asset index', async () => {
       await expect(contract.verifyAssetIndex(extra.address, 0, signer.address, 1)).to.be.revertedWith(err)
     })
 
-    it('should NOT revert when the provided verification index matches with the asset verification index', async () => {
+    it('should NOT revert when the provided index matches with the asset index', async () => {
       await expect(contract.verifyAssetIndex(extra.address, 0, signer.address, 0)).to.not.be.revertedWith(err)
     })
   })

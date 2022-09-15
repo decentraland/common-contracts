@@ -5,7 +5,7 @@ pragma solidity ^0.8.7;
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
 abstract contract ContractIndexVerifiable is OwnableUpgradeable {
-    /// @notice Current verification index at a contract level. Only updatable by the owner of the contract.
+    /// @notice Current index at a contract level. Only updatable by the owner of the contract.
     /// Updating it will invalidate all signatures created with the previous value on a contract level.
     uint256 private contractIndex;
 
@@ -17,23 +17,23 @@ abstract contract ContractIndexVerifiable is OwnableUpgradeable {
 
     function __ContractIndexVerifiable_init_unchained() internal onlyInitializing {}
 
-    /// @notice Get the current contract verification index.
-    /// @return The current contract verification index.
+    /// @notice Get the current contract index.
+    /// @return The current contract index.
     function getContractIndex() external view returns (uint256) {
         return contractIndex;
     }
 
-    /// @notice As the owner of the contract, increase the contract verification index by 1.
+    /// @notice As the owner of the contract, increase the contract index by 1.
     function bumpContractIndex() external onlyOwner {
         _bumpContractIndex();
     }
 
-    /// @dev Increase the contract verification index by 1
+    /// @dev Increase the contract index by 1
     function _bumpContractIndex() internal {
         emit ContractIndexUpdated(++contractIndex, _msgSender());
     }
 
-    /// @dev Reverts if the provided verification index does not match the contract verification index.
+    /// @dev Reverts if the provided index does not match the contract index.
     function _verifyContractIndex(uint256 _index) internal view {
         require(_index == contractIndex, "ContractIndexVerifiable#_verifyContractIndex: CONTRACT_INDEX_MISMATCH");
     }

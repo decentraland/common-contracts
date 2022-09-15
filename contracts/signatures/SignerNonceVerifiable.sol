@@ -4,37 +4,37 @@ pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 
-abstract contract SignerNonceVerifiable is ContextUpgradeable {
-    /// @notice Current nonce per signer.
+abstract contract SignerIndexVerifiable is ContextUpgradeable {
+    /// @notice Current verification index per signer.
     /// Updating it will invalidate all signatures created with the previous value on a signer level.
-    /// @custom:schema (signer address -> nonce)
-    mapping(address => uint256) private signerNonce;
+    /// @custom:schema (signer address -> verification index)
+    mapping(address => uint256) private signerIndex;
 
-    event SignerNonceUpdated(address indexed _signer, uint256 _newNonce, address _sender);
+    event SignerIndexUpdated(address indexed _signer, uint256 _newIndex, address _sender);
 
-    function __SignerNonceVerifiable_init() internal onlyInitializing {}
+    function __SignerIndexVerifiable_init() internal onlyInitializing {}
 
-    function __SignerNonceVerifiable_init_unchained() internal onlyInitializing {}
+    function __SignerIndexVerifiable_init_unchained() internal onlyInitializing {}
 
-    /// @notice Get the current signer nonce.
+    /// @notice Get the current signer verification index.
     /// @param _signer The address of the signer.
-    /// @return The nonce of the given signer.
-    function getSignerNonce(address _signer) external view returns (uint256) {
-        return signerNonce[_signer];
+    /// @return The verification index of the given signer.
+    function getSignerIndex(address _signer) external view returns (uint256) {
+        return signerIndex[_signer];
     }
 
-    /// @notice Increase the signer nonce of the sender by 1.
-    function bumpSignerNonce() external {
-        _bumpSignerNonce(_msgSender());
+    /// @notice Increase the signer verification index of the sender by 1.
+    function bumpSignerIndex() external {
+        _bumpSignerIndex(_msgSender());
     }
 
-    /// @dev Increase the signer nonce by 1
-    function _bumpSignerNonce(address _signer) internal {
-        emit SignerNonceUpdated(_signer, ++signerNonce[_signer], _msgSender());
+    /// @dev Increase the signer verification index by 1
+    function _bumpSignerIndex(address _signer) internal {
+        emit SignerIndexUpdated(_signer, ++signerIndex[_signer], _msgSender());
     }
 
-    /// @dev Reverts if the provided nonce does not match the signer nonce.
-    function _verifySignerNonce(address _signer, uint256 _nonce) internal view {
-        require(_nonce == signerNonce[_signer], "SignerNonceVerifiable#_verifySignerNonce: SIGNER_NONCE_MISMATCH");
+    /// @dev Reverts if the provided verification index does not match the signer verification index.
+    function _verifySignerIndex(address _signer, uint256 _index) internal view {
+        require(_index == signerIndex[_signer], "SignerIndexVerifiable#_verifySignerIndex: SIGNER_INDEX_MISMATCH");
     }
 }

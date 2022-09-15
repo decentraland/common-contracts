@@ -4,54 +4,54 @@ pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 
-abstract contract AssetNonceVerifiable is ContextUpgradeable {
-    /// @notice Current nonce per asset per signer.
+abstract contract AssetIndexVerifiable is ContextUpgradeable {
+    /// @notice Current verification index per asset per signer.
     /// Updating it will invalidate all signatures created with the previous value on an asset level.
-    /// @custom:schema (contract address -> token id -> signer address -> nonce)
-    mapping(address => mapping(uint256 => mapping(address => uint256))) private assetNonce;
+    /// @custom:schema (contract address -> token id -> signer address -> verification index)
+    mapping(address => mapping(uint256 => mapping(address => uint256))) private assetIndex;
 
-    event AssetNonceUpdated(address indexed _signer, address indexed _contractAddress, uint256 indexed _tokenId, uint256 _newNonce, address _sender);
+    event AssetIndexUpdated(address indexed _signer, address indexed _contractAddress, uint256 indexed _tokenId, uint256 _newIndex, address _sender);
 
-    function __AssetNonceVerifiable_init() internal onlyInitializing {}
+    function __AssetIndexVerifiable_init() internal onlyInitializing {}
 
-    function __AssetNonceVerifiable_init_unchained() internal onlyInitializing {}
+    function __AssetIndexVerifiable_init_unchained() internal onlyInitializing {}
 
-    /// @notice Get the signer nonce for a given ERC721 token.
+    /// @notice Get the signer verification index for a given ERC721 token.
     /// @param _contractAddress The address of the ERC721 contract.
     /// @param _tokenId The id of the ERC721 token.
     /// @param _signer The address of the signer.
-    /// @return The nonce of the given signer for the provided asset.
-    function getAssetNonce(
+    /// @return The verification index of the given signer for the provided asset.
+    function getAssetIndex(
         address _contractAddress,
         uint256 _tokenId,
         address _signer
     ) external view returns (uint256) {
-        return assetNonce[_contractAddress][_tokenId][_signer];
+        return assetIndex[_contractAddress][_tokenId][_signer];
     }
 
-    /// @notice Increase the asset nonce of the sender by 1.
+    /// @notice Increase the asset verification index of the sender by 1.
     /// @param _contractAddress The contract address of the asset.
     /// @param _tokenId The token id of the asset.
-    function bumpAssetNonce(address _contractAddress, uint256 _tokenId) external {
-        _bumpAssetNonce(_contractAddress, _tokenId, _msgSender());
+    function bumpAssetIndex(address _contractAddress, uint256 _tokenId) external {
+        _bumpAssetIndex(_contractAddress, _tokenId, _msgSender());
     }
 
-    /// @dev Increase the asset nonce by 1
-    function _bumpAssetNonce(
+    /// @dev Increase the asset verification index by 1
+    function _bumpAssetIndex(
         address _contractAddress,
         uint256 _tokenId,
         address _signer
     ) internal {
-        emit AssetNonceUpdated(_signer, _contractAddress, _tokenId, ++assetNonce[_contractAddress][_tokenId][_signer], _msgSender());
+        emit AssetIndexUpdated(_signer, _contractAddress, _tokenId, ++assetIndex[_contractAddress][_tokenId][_signer], _msgSender());
     }
 
-    /// @dev Reverts if the provided nonce does not match the asset nonce.
-    function _verifyAssetNonce(
+    /// @dev Reverts if the provided verification index does not match the asset verification index.
+    function _verifyAssetIndex(
         address _contractAddress,
         uint256 _tokenId,
         address _signer,
-        uint256 _nonce
+        uint256 _index
     ) internal view {
-        require(_nonce == assetNonce[_contractAddress][_tokenId][_signer], "AssetNonceVerifiable#_verifyAssetNonce: ASSET_NONCE_MISMATCH");
+        require(_index == assetIndex[_contractAddress][_tokenId][_signer], "AssetIndexVerifiable#_verifyAssetIndex: ASSET_INDEX_MISMATCH");
     }
 }

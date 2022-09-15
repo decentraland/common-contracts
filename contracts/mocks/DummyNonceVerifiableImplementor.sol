@@ -2,25 +2,25 @@
 
 pragma solidity ^0.8.7;
 
-import "../signatures/ContractNonceVerifiable.sol";
-import "../signatures/SignerNonceVerifiable.sol";
-import "../signatures/AssetNonceVerifiable.sol";
+import "../signatures/ContractIndexVerifiable.sol";
+import "../signatures/SignerIndexVerifiable.sol";
+import "../signatures/AssetIndexVerifiable.sol";
 
-contract DummyNonceVerifiableImplementor is ContractNonceVerifiable, SignerNonceVerifiable, AssetNonceVerifiable {
+contract DummyIndexVerifiableImplementor is ContractIndexVerifiable, SignerIndexVerifiable, AssetIndexVerifiable {
     function initialize() external initializer {
-        __ContractNonceVerifiable_init();
+        __ContractIndexVerifiable_init();
     }
 
-    function test__ContractNonceVerifiable_init() external {
-        __ContractNonceVerifiable_init();
+    function test__ContractIndexVerifiable_init() external {
+        __ContractIndexVerifiable_init();
     }
 
-    function verifyContractNonce(uint256 _nonce) external view {
-        _verifyContractNonce(_nonce);
+    function verifyContractIndex(uint256 _index) external view {
+        _verifyContractIndex(_index);
     }
 
-    function verifySignerNonce(address _signer, uint256 _nonce) external view {
-        _verifySignerNonce(_signer, _nonce);
+    function verifySignerIndex(address _signer, uint256 _index) external view {
+        _verifySignerIndex(_signer, _index);
     }
 
     function bumpAll(
@@ -28,17 +28,17 @@ contract DummyNonceVerifiableImplementor is ContractNonceVerifiable, SignerNonce
         uint256 _tokenId,
         address _signer
     ) external {
-        _bumpContractNonce();
-        _bumpSignerNonce(_signer);
-        _bumpAssetNonce(_contractAddress, _tokenId, _signer);
+        _bumpContractIndex();
+        _bumpSignerIndex(_signer);
+        _bumpAssetIndex(_contractAddress, _tokenId, _signer);
     }
 
-    function verifyAssetNonce(
+    function verifyAssetIndex(
         address _contractAddress,
         uint256 _tokenId,
         address _signer,
-        uint256 _nonce
+        uint256 _index
     ) external view {
-        _verifyAssetNonce(_contractAddress, _tokenId, _signer, _nonce);
+        _verifyAssetIndex(_contractAddress, _tokenId, _signer, _index);
     }
 }

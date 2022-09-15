@@ -4,37 +4,37 @@ pragma solidity ^0.8.7;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-abstract contract ContractNonceVerifiable is OwnableUpgradeable {
-    /// @notice Current nonce at a contract level. Only updatable by the owner of the contract.
+abstract contract ContractIndexVerifiable is OwnableUpgradeable {
+    /// @notice Current verification index at a contract level. Only updatable by the owner of the contract.
     /// Updating it will invalidate all signatures created with the previous value on a contract level.
-    uint256 private contractNonce;
+    uint256 private contractIndex;
 
-    event ContractNonceUpdated(uint256 _newNonce, address _sender);
+    event ContractIndexUpdated(uint256 _newIndex, address _sender);
 
-    function __ContractNonceVerifiable_init() internal onlyInitializing {
+    function __ContractIndexVerifiable_init() internal onlyInitializing {
         __Ownable_init();
     }
 
-    function __ContractNonceVerifiable_init_unchained() internal onlyInitializing {}
+    function __ContractIndexVerifiable_init_unchained() internal onlyInitializing {}
 
-    /// @notice Get the current contract nonce.
-    /// @return The current contract nonce.
-    function getContractNonce() external view returns (uint256) {
-        return contractNonce;
+    /// @notice Get the current contract verification index.
+    /// @return The current contract verification index.
+    function getContractIndex() external view returns (uint256) {
+        return contractIndex;
     }
 
-    /// @notice As the owner of the contract, increase the contract nonce by 1.
-    function bumpContractNonce() external onlyOwner {
-        _bumpContractNonce();
+    /// @notice As the owner of the contract, increase the contract verification index by 1.
+    function bumpContractIndex() external onlyOwner {
+        _bumpContractIndex();
     }
 
-    /// @dev Increase the contract nonce by 1
-    function _bumpContractNonce() internal {
-        emit ContractNonceUpdated(++contractNonce, _msgSender());
+    /// @dev Increase the contract verification index by 1
+    function _bumpContractIndex() internal {
+        emit ContractIndexUpdated(++contractIndex, _msgSender());
     }
 
-    /// @dev Reverts if the provided nonce does not match the contract nonce.
-    function _verifyContractNonce(uint256 _nonce) internal view {
-        require(_nonce == contractNonce, "ContractNonceVerifiable#_verifyContractNonce: CONTRACT_NONCE_MISMATCH");
+    /// @dev Reverts if the provided verification index does not match the contract verification index.
+    function _verifyContractIndex(uint256 _index) internal view {
+        require(_index == contractIndex, "ContractIndexVerifiable#_verifyContractIndex: CONTRACT_INDEX_MISMATCH");
     }
 }

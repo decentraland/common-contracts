@@ -1,21 +1,21 @@
 import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
 import { expect } from 'chai'
 import { ethers } from 'hardhat'
-import { DummyNonceVerifiableImplementor, DummyNonceVerifiableImplementor__factory } from '../typechain-types'
+import { DummyIndexVerifiableImplementor, DummyIndexVerifiableImplementor__factory } from '../typechain-types'
 
-describe('NonceVerifiable', () => {
+describe('IndexVerifiable', () => {
   let deployer: SignerWithAddress
   let owner: SignerWithAddress
   let signer: SignerWithAddress
   let extra: SignerWithAddress
 
-  let contractFactory: DummyNonceVerifiableImplementor__factory
-  let contract: DummyNonceVerifiableImplementor
+  let contractFactory: DummyIndexVerifiableImplementor__factory
+  let contract: DummyIndexVerifiableImplementor
 
   beforeEach(async () => {
     ;[deployer, owner, signer, extra] = await ethers.getSigners()
 
-    contractFactory = await ethers.getContractFactory('DummyNonceVerifiableImplementor')
+    contractFactory = await ethers.getContractFactory('DummyIndexVerifiableImplementor')
     contract = await contractFactory.deploy()
 
     await contract.connect(deployer).initialize()
@@ -24,7 +24,7 @@ describe('NonceVerifiable', () => {
 
   describe('initialize', () => {
     it('should set the owner as the caller after initializing', async () => {
-      contractFactory = await ethers.getContractFactory('DummyNonceVerifiableImplementor')
+      contractFactory = await ethers.getContractFactory('DummyIndexVerifiableImplementor')
       contract = await contractFactory.deploy()
 
       expect(await contract.owner()).to.be.equal('0x0000000000000000000000000000000000000000')
@@ -39,102 +39,102 @@ describe('NonceVerifiable', () => {
     })
   })
 
-  describe('__NonceVerifiable_init', () => {
+  describe('__ContractIndexVerifiable_init', () => {
     it('should set the owner', async () => {
       expect(await contract.owner()).to.be.equal(owner.address)
     })
 
     it('should revert when called after initialization', async () => {
-      await expect(contract.connect(deployer).test__ContractNonceVerifiable_init()).to.be.revertedWith('Initializable: contract is not initializing')
+      await expect(contract.connect(deployer).test__ContractIndexVerifiable_init()).to.be.revertedWith('Initializable: contract is not initializing')
     })
   })
 
-  describe('bumpContractNonce', () => {
-    it('should increase the contract nonce by 1', async () => {
-      expect(await contract.getContractNonce()).to.be.equal(0)
-      await contract.connect(owner).bumpContractNonce()
-      expect(await contract.getContractNonce()).to.be.equal(1)
+  describe('bumpContractIndex', () => {
+    it('should increase the contract verification index by 1', async () => {
+      expect(await contract.getContractIndex()).to.be.equal(0)
+      await contract.connect(owner).bumpContractIndex()
+      expect(await contract.getContractIndex()).to.be.equal(1)
     })
 
-    it('should emit an event regarding the contract nonce update', async () => {
-      await expect(contract.connect(owner).bumpContractNonce()).to.emit(contract, 'ContractNonceUpdated').withArgs(1, owner.address)
+    it('should emit an event regarding the contract verification index update', async () => {
+      await expect(contract.connect(owner).bumpContractIndex()).to.emit(contract, 'ContractIndexUpdated').withArgs(1, owner.address)
     })
 
     it('should revert if the caller is not the contract owner', async () => {
-      await expect(contract.connect(extra).bumpContractNonce()).to.be.revertedWith('Ownable: caller is not the owner')
+      await expect(contract.connect(extra).bumpContractIndex()).to.be.revertedWith('Ownable: caller is not the owner')
     })
   })
 
-  describe('bumpSignerNonce', () => {
-    it('should increase the signer nonce by 1', async () => {
-      expect(await contract.getSignerNonce(signer.address)).to.be.equal(0)
-      await contract.connect(signer).bumpSignerNonce()
-      expect(await contract.getSignerNonce(signer.address)).to.be.equal(1)
+  describe('bumpSignerIndex', () => {
+    it('should increase the signer verification index by 1', async () => {
+      expect(await contract.getSignerIndex(signer.address)).to.be.equal(0)
+      await contract.connect(signer).bumpSignerIndex()
+      expect(await contract.getSignerIndex(signer.address)).to.be.equal(1)
     })
 
-    it('should emit an event regarding the contract nonce update', async () => {
-      await expect(contract.connect(signer).bumpSignerNonce()).to.emit(contract, 'SignerNonceUpdated').withArgs(signer.address, 1, signer.address)
+    it('should emit an event regarding the contract verification index update', async () => {
+      await expect(contract.connect(signer).bumpSignerIndex()).to.emit(contract, 'SignerIndexUpdated').withArgs(signer.address, 1, signer.address)
     })
   })
 
-  describe('bumpAssetNonce', () => {
-    it('should increase the asset nonce by 1', async () => {
-      expect(await contract.getAssetNonce(extra.address, 0, signer.address)).to.be.equal(0)
-      await contract.connect(signer).bumpAssetNonce(extra.address, 0)
-      expect(await contract.getAssetNonce(extra.address, 0, signer.address)).to.be.equal(1)
+  describe('bumpAssetIndex', () => {
+    it('should increase the asset verification index by 1', async () => {
+      expect(await contract.getAssetIndex(extra.address, 0, signer.address)).to.be.equal(0)
+      await contract.connect(signer).bumpAssetIndex(extra.address, 0)
+      expect(await contract.getAssetIndex(extra.address, 0, signer.address)).to.be.equal(1)
     })
 
-    it('should emit an event regarding the contract nonce update', async () => {
-      await expect(contract.connect(signer).bumpAssetNonce(extra.address, 0))
-        .to.emit(contract, 'AssetNonceUpdated')
+    it('should emit an event regarding the contract verification index update', async () => {
+      await expect(contract.connect(signer).bumpAssetIndex(extra.address, 0))
+        .to.emit(contract, 'AssetIndexUpdated')
         .withArgs(signer.address, extra.address, 0, 1, signer.address)
     })
   })
 
-  describe('_verifyContractNonce', () => {
-    const err = 'ContractNonceVerifiable#_verifyContractNonce: CONTRACT_NONCE_MISMATCH'
+  describe('_verifyContractIndex', () => {
+    const err = 'ContractIndexVerifiable#_verifyContractIndex: CONTRACT_INDEX_MISMATCH'
 
-    it('should revert when the provided nonce does not match with the contract nonce', async () => {
-      await expect(contract.verifyContractNonce(1)).to.be.revertedWith(err)
+    it('should revert when the provided verification index does not match with the contract verification index', async () => {
+      await expect(contract.verifyContractIndex(1)).to.be.revertedWith(err)
     })
 
-    it('should NOT revert when the provided nonce matches with the contract nonce', async () => {
-      await expect(contract.verifyContractNonce(0)).to.not.be.revertedWith(err)
-    })
-  })
-
-  describe('_verifySignerNonce', () => {
-    const err = 'SignerNonceVerifiable#_verifySignerNonce: SIGNER_NONCE_MISMATCH'
-
-    it('should revert when the provided nonce does not match with the signer nonce', async () => {
-      await expect(contract.verifySignerNonce(signer.address, 1)).to.be.revertedWith(err)
-    })
-
-    it('should NOT revert when the provided nonce matches with the signer nonce', async () => {
-      await expect(contract.verifySignerNonce(signer.address, 0)).to.not.be.revertedWith(err)
+    it('should NOT revert when the provided verification index matches with the contract verification index', async () => {
+      await expect(contract.verifyContractIndex(0)).to.not.be.revertedWith(err)
     })
   })
 
-  describe('_verifyAssetNonce', () => {
-    const err = 'AssetNonceVerifiable#_verifyAssetNonce: ASSET_NONCE_MISMATCH'
+  describe('_verifySignerIndex', () => {
+    const err = 'SignerIndexVerifiable#_verifySignerIndex: SIGNER_INDEX_MISMATCH'
 
-    it('should revert when the provided nonce does not match with the asset nonce', async () => {
-      await expect(contract.verifyAssetNonce(extra.address, 0, signer.address, 1)).to.be.revertedWith(err)
+    it('should revert when the provided verification index does not match with the signer verification index', async () => {
+      await expect(contract.verifySignerIndex(signer.address, 1)).to.be.revertedWith(err)
     })
 
-    it('should NOT revert when the provided nonce matches with the asset nonce', async () => {
-      await expect(contract.verifyAssetNonce(extra.address, 0, signer.address, 0)).to.not.be.revertedWith(err)
+    it('should NOT revert when the provided verification index matches with the signer verification index', async () => {
+      await expect(contract.verifySignerIndex(signer.address, 0)).to.not.be.revertedWith(err)
+    })
+  })
+
+  describe('_verifyAssetIndex', () => {
+    const err = 'AssetIndexVerifiable#_verifyAssetIndex: ASSET_INDEX_MISMATCH'
+
+    it('should revert when the provided verification index does not match with the asset verification index', async () => {
+      await expect(contract.verifyAssetIndex(extra.address, 0, signer.address, 1)).to.be.revertedWith(err)
+    })
+
+    it('should NOT revert when the provided verification index matches with the asset verification index', async () => {
+      await expect(contract.verifyAssetIndex(extra.address, 0, signer.address, 0)).to.not.be.revertedWith(err)
     })
   })
 
   describe('bumpAll (mock)', () => {
-    it('should emit ContractNonceUpdated, SignerNonceUpdated and AssetNonceUpdated events', async () => {
+    it('should emit ContractIndexUpdated, SignerIndexUpdated and AssetIndexUpdated events', async () => {
       await expect(contract.connect(owner).bumpAll(extra.address, 0, signer.address))
-        .to.emit(contract, 'ContractNonceUpdated')
+        .to.emit(contract, 'ContractIndexUpdated')
         .withArgs(1, owner.address)
-        .and.to.emit(contract, 'SignerNonceUpdated')
+        .and.to.emit(contract, 'SignerIndexUpdated')
         .withArgs(signer.address, 1, owner.address)
-        .and.to.emit(contract, 'AssetNonceUpdated')
+        .and.to.emit(contract, 'AssetIndexUpdated')
         .withArgs(signer.address, extra.address, 0, 1, owner.address)
     })
   })

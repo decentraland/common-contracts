@@ -17,7 +17,8 @@ npm install -D @openzeppelin/contracts-upgradeable@4.5.0
 ## Usage
 
 ```
-import "@dcl/common-contracts/signatures/NonceVerifiable.sol";
+import "@dcl/common-contracts/signatures/AssetIndexVerifiable.sol";
+import "@dcl/common-contracts/meta-transactions/NativeMetaTransaction.sol";
 ```
 
 ## Contracts

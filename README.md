@@ -26,19 +26,21 @@ import "@dcl/common-contracts/signatures/NonceVerifiable.sol";
 
 Allows a contract to support meta transactions.
 
-What are meta transactions? 
+What are meta transactions?
 
 They provide a way for users to enjoy "gasless" transactions by just signing the data of the transaction they want to execute and letting a relayer, which is the one that ends up paying the fees, to execute it.
 
-### NonceVerifiable
+### ContractNonceVerifiable, SignerNonceVerifiable, AssetNonceVerifiable
 
 Allows signatures to be invalidated on 3 different levels. Contract, Signer and Asset levels.
 
 The contract should be queried for the current nonces on each level and use those nonces to create a signature.
 
-When the signatures are recovered, they have to be verifies with these nonces.
+When the signatures are recovered, they have to be verified with these nonces.
 
 They can be updated in order to invalidate signatures that were created with previous values.
+
+They come separated in 3 different contracts for each level but you might choose if you want all or just a couple depending on your requirements.
 
 ## Development
 
@@ -56,19 +58,19 @@ npm ci
 ### Compile
 
 ```
-npx hardhat compile
+npm run compile
 ```
 
 ### Test
 
 ```
-npx hardhat test
+npm run test
 ```
 
 Will report gas usage.
 
 ```
-npx hardhat coverage
+npx run test:coverage
 ```
 
 Will report coverage in the `coverage` directory.

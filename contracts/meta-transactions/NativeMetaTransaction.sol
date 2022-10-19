@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.7;
+pragma solidity 0.8.7;
 
 import "@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol";
 
@@ -42,8 +42,8 @@ abstract contract NativeMetaTransaction is EIP712Upgradeable {
     /// @return The data as bytes of what the relayed function would have returned.
     function executeMetaTransaction(
         address _userAddress,
-        bytes memory _functionData,
-        bytes memory _signature
+        bytes calldata _functionData,
+        bytes calldata _signature
     ) external payable returns (bytes memory) {
         MetaTransaction memory metaTx = MetaTransaction({nonce: nonces[_userAddress], from: _userAddress, functionData: _functionData});
 
@@ -71,7 +71,7 @@ abstract contract NativeMetaTransaction is EIP712Upgradeable {
     function _verify(
         address _signer,
         MetaTransaction memory _metaTx,
-        bytes memory _signature
+        bytes calldata _signature
     ) private view returns (bool) {
         bytes32 structHash = keccak256(abi.encode(META_TRANSACTION_TYPEHASH, _metaTx.nonce, _metaTx.from, keccak256(_metaTx.functionData)));
         bytes32 typedDataHash = _hashTypedDataV4(structHash);

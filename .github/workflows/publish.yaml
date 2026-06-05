@@ -8,19 +8,21 @@ on:
     types:
       - created
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
       - run: npm ci
       - run: npx ts-node ./scripts/build.ts
-      - uses: decentraland/oddish-action@0074f2d535c43b5c83f136525304a6277166d77f # @3.0.0
+      - uses: decentraland/oddish-action@0074f2d535c43b5c83f136525304a6277166d77f # @master
         with:
           cwd: "./dist"
           access: public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

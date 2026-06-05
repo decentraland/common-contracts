@@ -18,7 +18,7 @@ jobs:
           node-version: 24
       - run: npm ci
       - run: npx ts-node ./scripts/build.ts
-      - uses: menduz/oddish-action@3.0.0
+      - uses: decentraland/oddish-action@0074f2d535c43b5c83f136525304a6277166d77f # @3.0.0
         with:
           cwd: "./dist"
           access: public
